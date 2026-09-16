@@ -83,16 +83,16 @@ const HMSAuth = (function () {
 
   function logout() {
     localStorage.removeItem(USER_KEY);
-    // Find relative path to root index.html
+    // Find relative path to root login.html
     const isInsidePages = window.location.pathname.includes('/pages/');
     const isSubRole = window.location.pathname.includes('/pages/admin/') ||
                       window.location.pathname.includes('/pages/doctor/') ||
                       window.location.pathname.includes('/pages/receptionist/') ||
                       window.location.pathname.includes('/pages/patient/');
     
-    let target = 'index.html';
-    if (isSubRole) target = '../../index.html';
-    else if (isInsidePages) target = '../index.html';
+    let target = 'login.html';
+    if (isSubRole) target = '../../login.html';
+    else if (isInsidePages) target = '../login.html';
 
     window.location.href = target;
   }

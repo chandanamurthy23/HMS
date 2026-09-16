@@ -8,8 +8,8 @@ A modern, responsive, and comprehensive Hospital Management System (HMS) fronten
 
 | # | Screen / Feature | Description | File Path |
 |---|---|---|---|
-| **1** | **Login Portal (Role Based)** | Split-card authentication with role switcher, password visibility toggle, and responsive medical banner. | `index.html` |
-| **2** | **Public Hospital Homepage** | Emergency bar, hero banner, quick access tiles, metrics, live chart, and offcanvas mobile menu. | `home.html` |
+| **1** | **Public Hospital Homepage (Landing Page)** | Root landing page with emergency bar, hero banner, quick access tiles, metrics, live chart, and offcanvas mobile menu. | `index.html` (or `home.html`) |
+| **2** | **Login Portal (Role Based)** | Split-card authentication with role switcher, password visibility toggle, and responsive medical banner. | `login.html` |
 | **3** | **Clinical Departments** | 8 specialized medical divisions, HOD faculty cards, bed capacity, real-time search & category filter, and modal for adding new departments. | `pages/departments.html` |
 | **4** | **Admin Dashboard** | Executive summary cards, monthly Outpatient/Inpatient visits trend chart, and department-wise doughnut chart. | `pages/admin/dashboard.html` |
 | **5** | **Receptionist Dashboard** | Daily appointments counter, interactive monthly calendar with active date picker, and quick booking modal. | `pages/receptionist/dashboard.html` |
@@ -86,8 +86,10 @@ HMS/
 │   ├── ratings.html             # Patient Reviews & Ratings
 │   ├── settings.html            # System & Profile Settings
 │   └── waiting-time.html        # OPD Waiting Queue Tracker
-├── home.html                    # Public Hospital Homepage
-├── index.html                   # Login & Authentication Portal
+├── index.html                   # Public Hospital Homepage (Root Landing)
+├── home.html                    # Homepage Alias / Mirror
+├── login.html                   # Staff & Patient Authentication Portal
+├── vercel.json                  # Vercel Deployment & Route Rewrites
 ├── .gitignore                   # Git ignore file
 └── README.md                    # Documentation
 ```
@@ -96,6 +98,11 @@ HMS/
 
 ## Getting Started
 
+### Deploy on Vercel
+1. Import this repository into **[Vercel](https://vercel.com/)**.
+2. No build command is required (Framework Preset: *Other*).
+3. The root URL (`/`) will immediately open the **Hospital Homepage**, with full navigation to all departments, booking wizards, and portals.
+
 ### Using XAMPP (Apache)
 1. Clone or place this repository into your XAMPP `htdocs` directory:
    ```bash
@@ -103,8 +110,8 @@ HMS/
    ```
 2. Start the **Apache** server from the XAMPP Control Panel.
 3. Open your browser and navigate to:
-   - **Homepage**: `http://localhost/HMS/home.html`
-   - **Login**: `http://localhost/HMS/index.html`
+   - **Homepage**: `http://localhost/HMS/index.html` (or `http://localhost/HMS/`)
+   - **Login Portal**: `http://localhost/HMS/login.html`
 
 ### Using Any Local HTTP Server
 You can also run it with Python or Node.js:
@@ -113,7 +120,7 @@ You can also run it with Python or Node.js:
 python -m http.server 8000
 
 # Open in browser:
-http://localhost:8000/home.html
+http://localhost:8000/
 ```
 
 ---

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinical Consultation Room - MedPulse HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- PATIENT HEADER BANNER (Reference Image Screen 6: Sneha R, Age 28, H1268) -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+          <div class="card-body p-3 p-md-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-inline-flex align-items-center justify-content-center fs-4" style="width: 52px; height: 52px;">
+                  <span id="bannerInitials">SR</span>
+                </div>
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <h4 class="fw-bold mb-0 text-dark" id="bannerPatientName">Sneha R</h4>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="bannerPatientId">H1268</span>
+                  </div>
+                  <div class="text-muted small mt-1">
+                    <span id="bannerPatientAge">Age: 28</span> • 
+                    <span id="bannerPatientGender">Female</span> • 
+                    Blood: <strong class="text-danger" id="bannerPatientBlood">O+</strong> • 
+                    Attending: <strong class="text-dark">Dr. Priya S (Cardiology)</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <select class="form-select form-select-sm" id="consultPatientSelect" onchange="loadPatientClinicalData(this.value)" style="min-width: 180px; flex-grow: 1;">
+                  <!-- Populated via JS -->
+                </select>
+                <div class="d-flex gap-2">
+                  <a href="prescriptions.html?patientId=H1268" class="btn btn-sm btn-outline-danger" title="Prescriptions">
+                    <i class="bi bi-capsule me-1"></i> View Rx
+                  </a>
+                  <a href="billing.html?patientId=H1268" class="btn btn-sm btn-outline-success" title="Billing">
+                    <i class="bi bi-receipt me-1"></i> Bill
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLINICAL WORKSPACE TABS (Reference Image Screen 6: Medical History, Tests, Prescription, Notes) -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+          <div class="card-header bg-light border-bottom p-0">
+            <ul class="nav nav-tabs card-header-tabs scrollable-tabs m-0 border-0" id="consultationTabs" role="tablist">
+              <li class="nav-item">
+                <button class="nav-link active py-3 px-4 fw-semibold border-0" id="tab-consult-btn" data-bs-toggle="tab" data-bs-target="#tab-consult" type="button">
+                  <i class="bi bi-clipboard2-pulse text-primary me-2"></i> Notes & Diagnosis
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link py-3 px-4 fw-semibold border-0" id="tab-history-btn" data-bs-toggle="tab" data-bs-target="#tab-history" type="button">
+                  <i class="bi bi-clock-history text-secondary me-2"></i> Medical History
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link py-3 px-4 fw-semibold border-0" id="tab-tests-btn" data-bs-toggle="tab" data-bs-target="#tab-tests" type="button">
+                  <i class="bi bi-eyedropper text-info me-2"></i> Tests
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link py-3 px-4 fw-semibold border-0" id="tab-rx-btn" data-bs-toggle="tab" data-bs-target="#tab-rx" type="button">
+                  <i class="bi bi-capsule text-danger me-2"></i> Prescription
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-body p-4">
+            <form id="consultationForm" onsubmit="handleSaveConsultation(event)">
+              <div class="tab-content">
+                
+                <!-- TAB 1: ACTIVE CONSULTATION & DIAGNOSIS -->
+                <div class="tab-pane fade show active" id="tab-consult">
+                  <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                      <label class="form-label fw-bold">Chief Symptoms & Presentation <span class="text-danger">*</span></label>
+                      <textarea class="form-control" id="cSymptoms" rows="3" placeholder="Patient reported symptoms, onset, intensity..." required></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label fw-bold">Clinical Diagnosis & Findings <span class="text-danger">*</span></label>
+                      <textarea class="form-control" id="cDiagnosis" rows="3" placeholder="Primary diagnostic conclusions, ICD category..." required></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label fw-bold">Consultation Notes & Physical Examination</label>
+                      <textarea class="form-control" id="cNotes" rows="4" placeholder="Vitals observed, heart sounds, chest auscultation, palpation findings..."></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label class="form-label fw-bold">Doctor Private / Clinical Instructions</label>
+                      <textarea class="form-control" id="cDoctorNotes" rows="4" placeholder="Follow-up advice, dietary precautions, restriction on physical activity..."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 2: LAB TESTS -->
+                <div class="tab-pane fade" id="tab-tests">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-file-earmark-medical me-1 text-info"></i> Diagnostic Laboratory & Imaging Tests</h6>
+                    <button type="button" class="btn btn-sm btn-outline-info" onclick="addTestRow()">
+                      <i class="bi bi-plus-circle me-1"></i> Add Test Order
+                    </button>
+                  </div>
+                  
+                  <div class="table-responsive mb-3">
+                    <table class="table table-bordered align-middle small text-nowrap" id="testsTable">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Test Name</th>
+                          <th>Result / Observation</th>
+                          <th>Reference Date</th>
+                          <th>Remarks / Clinical Action</th>
+                          <th style="width: 50px;"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="testsTableBody">
+                        <!-- Dynamic Test Rows -->
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="form-text">Tests ordered will be sent directly to Central Pathology and Diagnostic Radiology.</div>
+                </div>
+
+                <!-- TAB 3: PRESCRIPTION ORDERS -->
+                <div class="tab-pane fade" id="tab-rx">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-capsule me-1 text-danger"></i> Medication & Dosage Prescriptions</h6>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="addMedicationRow()">
+                      <i class="bi bi-plus-circle me-1"></i> Add Medicine
+                    </button>
+                  </div>
+
+                  <div class="table-responsive mb-3">
+                    <table class="table table-bordered align-middle small text-nowrap" id="rxTable">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Medicine & Strength</th>
+                          <th>Dosage</th>
+                          <th>Frequency</th>
+                          <th>Duration</th>
+                          <th>Special Instructions</th>
+                          <th style="width: 50px;"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="rxTableBody">
+                        <!-- Dynamic Medication Rows -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- TAB 4: MEDICAL HISTORY & PAST VISITS -->
+                <div class="tab-pane fade" id="tab-history">
+                  <div class="mb-4 p-3 bg-light rounded-3">
+                    <h6 class="fw-bold mb-1 text-primary">Baseline Medical History</h6>
+                    <p class="mb-0 small text-dark" id="patientBaseHistoryText">Loading patient baseline history...</p>
+                  </div>
+                  <h6 class="fw-bold mb-3">Previous Consultation Encounters</h6>
+                  <div id="patientPastConsultationsContainer" class="d-flex flex-column gap-3">
+                    <!-- Loaded dynamically -->
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- SUBMIT & COMPLETE CONTROLS -->
+              <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-4 pt-3 border-top">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="generateInvoiceCheck" checked>
+                  <label class="form-check-label small fw-medium" for="generateInvoiceCheck">
+                    Auto-generate hospital invoice for consultation fee ($120) & ordered tests
+                  </label>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-light" onclick="window.history.back()">Back</button>
+                  <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">
+                    <i class="bi bi-check2-circle me-1"></i> Finalize Consultation & Save
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    let currentPatient = null;
+    let appointmentIdParam = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      HMSNav.init('consultation', 'Clinical Consultation Room', ['Home', 'Clinical', 'Consultation']);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const preselectedPatientId = urlParams.get('patientId') || 'H1268';
+      appointmentIdParam = urlParams.get('appointmentId') || null;
+
+      await loadPatientDropdown(preselectedPatientId);
+      await loadPatientClinicalData(preselectedPatientId);
+    });
+
+    async function loadPatientDropdown(selectedId) {
+      const patients = await HMSApi.patients.getAll();
+      const pSel = document.getElementById('consultPatientSelect');
+      pSel.innerHTML = patients.map(p => `
+        <option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>
+          ${p.name} (${p.id}) - ${p.gender}, ${p.age} yrs
+        </option>
+      `).join('');
+    }
+
+    async function loadPatientClinicalData(patientId) {
+      currentPatient = await HMSApi.patients.getById(patientId);
+      if (!currentPatient) return;
+
+      // Update patient header banner
+      document.getElementById('bannerPatientName').textContent = currentPatient.name;
+      document.getElementById('bannerPatientId').textContent = currentPatient.id;
+      document.getElementById('bannerPatientAge').textContent = `Age: ${currentPatient.age}`;
+      document.getElementById('bannerPatientGender').textContent = currentPatient.gender;
+      document.getElementById('bannerPatientBlood').textContent = currentPatient.bloodGroup;
+      document.getElementById('bannerInitials').textContent = currentPatient.name.split(' ').map(n=>n[0]).join('');
+
+      // Set baseline history text
+      document.getElementById('patientBaseHistoryText').textContent = currentPatient.medicalHistory || 'No baseline illnesses noted.';
+
+      // Pre-fill form if existing consultation or load defaults
+      const consultations = await HMSApi.consultations.getByPatientId(patientId);
+      if (consultations.length > 0) {
+        const latest = consultations[0];
+        document.getElementById('cSymptoms').value = latest.symptoms;
+        document.getElementById('cDiagnosis').value = latest.diagnosis;
+        document.getElementById('cNotes').value = latest.notes;
+        document.getElementById('cDoctorNotes').value = 'Regular follow-up prescribed.';
+        
+        renderTests(latest.tests || []);
+        renderPrescriptions(latest.prescriptions || []);
+      } else {
+        document.getElementById('cSymptoms').value = 'Routine health assessment, mild fatigue';
+        document.getElementById('cDiagnosis').value = 'General weakness; advice for standard vitals monitoring';
+        document.getElementById('cNotes').value = 'Heart rate regular, lung fields clear bilaterally.';
+        document.getElementById('cDoctorNotes').value = 'Stay hydrated and report any recurrence.';
+        
+        renderTests([
+          { name: 'Complete Blood Count (CBC)', result: 'Results Pending', date: '2026-09-16', remarks: 'Routine panel' }
+        ]);
+        renderPrescriptions([
+          { medicine: 'Multivitamin with Zinc', dosage: '1 Tablet', frequency: '1-0-0 (Morning)', duration: '30 Days', instructions: 'After breakfast' }
+        ]);
+      }
+
+      // Render past history list
+      const pastContainer = document.getElementById('patientPastConsultationsContainer');
+      if (consultations.length === 0) {
+        pastContainer.innerHTML = `<div class="text-muted small py-3">No prior consultation encounters recorded for this patient.</div>`;
+      } else {
+        pastContainer.innerHTML = consultations.map(c => `
+          <div class="border rounded-3 p-3 bg-light">
+            <div class="d-flex justify-content-between mb-1">
+              <strong class="text-dark">${c.doctorName}</strong>
+              <span class="badge bg-primary">${c.date}</span>
+            </div>
+            <div class="small"><strong>Diagnosis:</strong> ${c.diagnosis}</div>
+            <div class="small text-muted"><strong>Symptoms:</strong> ${c.symptoms}</div>
+            <div class="small text-muted mt-1"><strong>Doctor Notes:</strong> ${c.notes}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderTests(tests) {
+      const tbody = document.getElementById('testsTableBody');
+      tbody.innerHTML = '';
+      tests.forEach(t => addTestRow(t.name, t.result, t.date, t.remarks));
+      if (tests.length === 0) addTestRow();
+    }
+
+    function addTestRow(name = '', result = '', date = '2026-09-16', remarks = '') {
+      const tbody = document.getElementById('testsTableBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm test-name" value="${name}" placeholder="e.g. ECG 12-Lead" required></td>
+        <td><input type="text" class="form-control form-control-sm test-result" value="${result}" placeholder="Normal / Pending"></td>
+        <td><input type="date" class="form-control form-control-sm test-date" value="${date}"></td>
+        <td><input type="text" class="form-control form-control-sm test-remarks" value="${remarks}" placeholder="Clinical remarks"></td>
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="this.closest('tr').remove()">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function renderPrescriptions(meds) {
+      const tbody = document.getElementById('rxTableBody');
+      tbody.innerHTML = '';
+      meds.forEach(m => addMedicationRow(m.medicine, m.dosage, m.frequency, m.duration, m.instructions));
+      if (meds.length === 0) addMedicationRow();
+    }
+
+    function addMedicationRow(medicine = '', dosage = '', frequency = '1-0-1', duration = '14 Days', instructions = 'After meals') {
+      const tbody = document.getElementById('rxTableBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm med-name" value="${medicine}" placeholder="e.g. Amoxicillin 500mg" required></td>
+        <td><input type="text" class="form-control form-control-sm med-dosage" value="${dosage}" placeholder="e.g. 500 mg"></td>
+        <td>
+          <select class="form-select form-select-sm med-frequency">
+            <option value="1-0-0 (Morning)" ${frequency.includes('1-0-0') ? 'selected' : ''}>1-0-0 (Morning)</option>
+            <option value="0-0-1 (Night)" ${frequency.includes('0-0-1') ? 'selected' : ''}>0-0-1 (Night)</option>
+            <option value="1-0-1 (Twice Daily)" ${frequency.includes('1-0-1') ? 'selected' : ''}>1-0-1 (Twice Daily)</option>
+            <option value="1-1-1 (Thrice Daily)" ${frequency.includes('1-1-1') ? 'selected' : ''}>1-1-1 (Thrice Daily)</option>
+            <option value="As Needed (SOS)" ${frequency.includes('SOS') ? 'selected' : ''}>As Needed (SOS)</option>
+          </select>
+        </td>
+        <td><input type="text" class="form-control form-control-sm med-duration" value="${duration}" placeholder="e.g. 30 Days"></td>
+        <td><input type="text" class="form-control form-control-sm med-instructions" value="${instructions}" placeholder="e.g. Take with water after meals"></td>
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="this.closest('tr').remove()">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    async function handleSaveConsultation(e) {
+      e.preventDefault();
+      if (!currentPatient) return;
+
+      // Extract tests
+      const tests = [];
+      document.querySelectorAll('#testsTableBody tr').forEach(row => {
+        const name = row.querySelector('.test-name')?.value;
+        if (name) {
+          tests.push({
+            name: name,
+            result: row.querySelector('.test-result')?.value || 'Pending',
+            date: row.querySelector('.test-date')?.value || new Date().toISOString().split('T')[0],
+            remarks: row.querySelector('.test-remarks')?.value || ''
+          });
+        }
+      });
+
+      // Extract prescriptions
+      const prescriptions = [];
+      document.querySelectorAll('#rxTableBody tr').forEach(row => {
+        const medName = row.querySelector('.med-name')?.value;
+        if (medName) {
+          prescriptions.push({
+            medicine: medName,
+            dosage: row.querySelector('.med-dosage')?.value || 'Standard',
+            frequency: row.querySelector('.med-frequency')?.value || '1-0-1',
+            duration: row.querySelector('.med-duration')?.value || '7 Days',
+            instructions: row.querySelector('.med-instructions')?.value || 'After meals'
+          });
+        }
+      });
+
+      const user = HMSAuth.getCurrentUser();
+      const consultationData = {
+        patientId: currentPatient.id,
+        patientName: currentPatient.name,
+        doctorId: user.id || 'DOC-101',
+        doctorName: user.name || 'Dr. Sarah Jenkins',
+        symptoms: document.getElementById('cSymptoms').value,
+        diagnosis: document.getElementById('cDiagnosis').value,
+        notes: document.getElementById('cNotes').value,
+        tests: tests,
+        prescriptions: prescriptions,
+        appointmentId: appointmentIdParam,
+        generateBill: document.getElementById('generateInvoiceCheck').checked,
+        consultationFee: 120.00
+      };
+
+      await HMSApi.consultations.save(consultationData);
+      HMSApp.showToast(`Consultation record saved for ${currentPatient.name}!`, 'success');
+
+      setTimeout(() => {
+        window.location.href = 'prescriptions.html';
+      }, 700);
+    }
+  </script>
+</body>
+</html>

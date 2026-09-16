@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment - HMS Hospital Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- TOP TABS -->
+        <ul class="nav nav-pills scrollable-tabs mb-4 gap-2 bg-white p-2 rounded-3 border shadow-sm" id="apptTabNav" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 fw-semibold" id="tab-wizard-btn" data-bs-toggle="pill" data-bs-target="#tab-wizard" type="button" role="tab">
+              <i class="bi bi-calendar-plus-fill me-1"></i> Book Appointment (3-Step Wizard)
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 fw-semibold" id="tab-list-btn" data-bs-toggle="pill" data-bs-target="#tab-list" type="button" role="tab">
+              <i class="bi bi-calendar-check me-1"></i> Scheduled Appointments Directory
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          
+          <!-- TAB 1: 3-STEP HORIZONTAL WIZARD (Reference Image Screen 4) -->
+          <div class="tab-pane fade show active" id="tab-wizard" role="tabpanel">
+            
+            <!-- HORIZONTAL STEPPER -->
+            <div class="wizard-steps-horizontal">
+              <div class="wizard-step-node active" id="hStepNode1">
+                <div class="wizard-step-circle">1</div>
+                <span>Select Doctor</span>
+              </div>
+              <div class="wizard-step-line"></div>
+              <div class="wizard-step-node" id="hStepNode2">
+                <div class="wizard-step-circle">2</div>
+                <span>Date & Time</span>
+              </div>
+              <div class="wizard-step-line"></div>
+              <div class="wizard-step-node" id="hStepNode3">
+                <div class="wizard-step-circle">3</div>
+                <span>Confirm</span>
+              </div>
+            </div>
+
+            <!-- STEP 1: SELECT DOCTOR -->
+            <div id="hStepPanel1">
+              <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white p-3">
+                <div class="row g-2 align-items-center">
+                  <div class="col-12 col-md-6">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+                      <input type="text" class="form-control" id="docSearchWizard" placeholder="Search doctor by name or specialty..." oninput="filterDoctorCards()">
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <select class="form-select form-select-sm" id="docDeptWizard" onchange="filterDoctorCards()">
+                      <option value="">All Departments</option>
+                      <option value="Cardiology">Cardiology</option>
+                      <option value="Neurology">Neurology</option>
+                      <option value="Pediatrics">Pediatrics</option>
+                      <option value="Orthopedics">Orthopedics</option>
+                      <option value="General Medicine">General Medicine</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DOCTOR CARDS GRID -->
+              <div class="row g-3" id="wizardDoctorCardsRow">
+                <!-- Dynamically loaded -->
+              </div>
+            </div>
+
+            <!-- STEP 2: DATE & TIME SELECTION -->
+            <div id="hStepPanel2" style="display: none;">
+              <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                  <div class="hms-card p-4">
+                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
+                      <h5 class="fw-bold mb-0 text-primary">Select Appointment Slot</h5>
+                      <span class="badge bg-primary-subtle text-primary" id="selectedDoctorBadge">Dr. Priya S (Cardiology)</span>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold" style="font-size: 0.88rem;">Select Patient <span class="text-danger">*</span></label>
+                      <select class="form-select" id="wizardPatientSelect" required>
+                        <!-- Populated via JS -->
+                      </select>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold" style="font-size: 0.88rem;">Appointment Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="wizardDateInput" required value="2026-09-17">
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold" style="font-size: 0.88rem;">Select Time Slot <span class="text-danger">*</span></label>
+                        <select class="form-select" id="wizardTimeSelect" required>
+                          <option value="10:00 AM">10:00 AM</option>
+                          <option value="10:30 AM" selected>10:30 AM</option>
+                          <option value="11:15 AM">11:15 AM</option>
+                          <option value="02:30 PM">02:30 PM</option>
+                          <option value="04:00 PM">04:00 PM</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="mb-4">
+                      <label class="form-label fw-semibold" style="font-size: 0.88rem;">Reason for Visit</label>
+                      <input type="text" class="form-control" id="wizardReasonInput" placeholder="e.g. Regular Heart Checkup, Follow-up consultation" value="Regular Consultation & Vitals">
+                    </div>
+
+                    <div class="d-flex justify-content-between pt-3 border-top">
+                      <button type="button" class="btn btn-outline-secondary px-3" onclick="goToWizardStep(1)">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Doctors
+                      </button>
+                      <button type="button" class="btn btn-primary px-4" onclick="goToWizardStep(3)">
+                        Next: Review & Confirm <i class="bi bi-arrow-right ms-1"></i>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: CONFIRM APPOINTMENT -->
+            <div id="hStepPanel3" style="display: none;">
+              <div class="row justify-content-center">
+                <div class="col-12 col-lg-7">
+                  <div class="hms-card p-4">
+                    <div class="text-center mb-4">
+                      <div class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center p-3 mb-2">
+                        <i class="bi bi-calendar2-check-fill fs-2"></i>
+                      </div>
+                      <h4 class="fw-bold mb-1">Confirm Your Appointment</h4>
+                      <p class="text-muted small">Please verify the appointment details before final confirmation.</p>
+                    </div>
+
+                    <div class="card border rounded-3 p-3 bg-light mb-4">
+                      <div class="row g-3">
+                        <div class="col-6">
+                          <div class="text-muted small">Doctor:</div>
+                          <div class="fw-bold text-dark" id="cfmDoctorName">Dr. Priya S</div>
+                          <div class="text-muted small" id="cfmDoctorDept">Cardiology</div>
+                        </div>
+                        <div class="col-6">
+                          <div class="text-muted small">Patient:</div>
+                          <div class="fw-bold text-dark" id="cfmPatientName">Sneha R</div>
+                          <div class="text-muted small" id="cfmPatientId">ID: H1268</div>
+                        </div>
+                        <div class="col-6 border-top pt-2">
+                          <div class="text-muted small">Date & Time:</div>
+                          <div class="fw-semibold text-primary" id="cfmDateTime">2026-09-17 • 10:30 AM</div>
+                        </div>
+                        <div class="col-6 border-top pt-2">
+                          <div class="text-muted small">Consultation Fee:</div>
+                          <div class="fw-bold text-success fs-5" id="cfmFee">₹500</div>
+                        </div>
+                        <div class="col-12 border-top pt-2">
+                          <div class="text-muted small">Reason:</div>
+                          <div class="fw-medium text-dark" id="cfmReason">Regular Consultation & Vitals</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between pt-2">
+                      <button type="button" class="btn btn-outline-secondary px-3" onclick="goToWizardStep(2)">
+                        <i class="bi bi-arrow-left me-1"></i> Back
+                      </button>
+                      <button type="button" class="btn btn-success px-4 fw-semibold" onclick="confirmAppointmentFromWizard()">
+                        <i class="bi bi-check2-circle me-1"></i> Confirm Appointment
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 2: SCHEDULED APPOINTMENTS DIRECTORY -->
+          <div class="tab-pane fade" id="tab-list" role="tabpanel">
+            <!-- FILTER & TAB CONTROLS -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+              <div class="card-body p-3">
+                <div class="row g-2 align-items-center">
+                  <div class="col-12 col-md-4">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+                      <input type="text" class="form-control" id="apptSearchInput" placeholder="Search patient, doctor, reason...">
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <select class="form-select form-select-sm" id="deptFilter" onchange="filterAppointments()">
+                      <option value="">All Departments</option>
+                      <option value="Cardiology">Cardiology</option>
+                      <option value="Neurology">Neurology</option>
+                      <option value="Pediatrics">Pediatrics</option>
+                      <option value="Orthopedics">Orthopedics</option>
+                      <option value="General Medicine">General Medicine</option>
+                    </select>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <select class="form-select form-select-sm" id="statusFilter" onchange="filterAppointments()">
+                      <option value="">All Statuses</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Waiting">Waiting</option>
+                      <option value="In Consultation">In Consultation</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-md-2">
+                    <div class="btn-group btn-group-sm w-100" role="group">
+                      <button type="button" class="btn btn-outline-primary active" id="tabAll" onclick="switchTimelineTab('All')">All</button>
+                      <button type="button" class="btn btn-outline-primary" id="tabUpcoming" onclick="switchTimelineTab('Upcoming')">Upcoming</button>
+                      <button type="button" class="btn btn-outline-primary" id="tabPast" onclick="switchTimelineTab('Past')">Past</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- APPOINTMENTS TABLE -->
+            <div class="hms-table-wrapper">
+              <div class="table-responsive">
+                <table class="hms-table align-middle text-nowrap" id="appointmentsTable">
+                  <thead>
+                    <tr>
+                      <th>Appt ID</th>
+                      <th>Patient</th>
+                      <th>Attending Doctor</th>
+                      <th>Department</th>
+                      <th>Date & Time</th>
+                      <th>Reason</th>
+                      <th>Status</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="apptTableBody">
+                    <!-- Loaded via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: RESCHEDULE APPOINTMENT -->
+  <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form onsubmit="handleRescheduleSubmit(event)">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold"><i class="bi bi-clock-history text-warning me-2"></i> Reschedule Appointment</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="rescheduleApptId">
+            <p class="small text-muted mb-3" id="reschedulePatientLabel">Patient: ...</p>
+            <div class="mb-3">
+              <label class="form-label">New Appointment Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="newApptDate" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">New Time Slot <span class="text-danger">*</span></label>
+              <select class="form-select" id="newApptTime" required>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="10:30 AM">10:30 AM</option>
+                <option value="11:15 AM">11:15 AM</option>
+                <option value="02:30 PM">02:30 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-warning text-dark fw-semibold"><i class="bi bi-calendar-event"></i> Update Schedule</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    let allAppointments = [];
+    let allDoctors = [];
+    let allPatients = [];
+    let selectedDoctor = null;
+    let currentTimeline = 'All';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      HMSNav.init('appointments', 'Appointment Booking & Queue', ['Home', 'Appointments']);
+      await loadInitialData();
+
+      document.getElementById('apptSearchInput').addEventListener('input', filterAppointments);
+    });
+
+    async function loadInitialData() {
+      allDoctors = await HMSApi.doctors.getAll();
+      allPatients = await HMSApi.patients.getAll();
+      allAppointments = await HMSApi.appointments.getAll();
+
+      renderDoctorCards(allDoctors);
+      populatePatientDropdown();
+      filterAppointments();
+
+      // Set default doctor
+      if (allDoctors.length > 0) {
+        selectDoctorForBooking(allDoctors[0]);
+      }
+    }
+
+    function renderDoctorCards(doctors) {
+      const container = document.getElementById('wizardDoctorCardsRow');
+      container.innerHTML = doctors.map(doc => `
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="hms-card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <img src="${doc.avatar}" onerror="this.src='https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=256'" class="rounded-circle border" width="56" height="56" style="object-fit: cover;">
+                <div>
+                  <h6 class="fw-bold text-dark mb-0">${doc.name}</h6>
+                  <div class="text-primary small fw-semibold">${doc.specialization}</div>
+                  <span class="badge bg-light text-secondary border mt-1">${doc.room}</span>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center small text-muted border-top pt-2 mb-3">
+                <div><i class="bi bi-clock me-1"></i> ${doc.schedule}</div>
+                <div class="fw-bold text-success fs-6">₹${doc.fee || 500}</div>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary w-100 fw-semibold" onclick='selectDoctorForBooking(${JSON.stringify(doc)})'>
+              <i class="bi bi-check2"></i> Select Doctor
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterDoctorCards() {
+      const query = document.getElementById('docSearchWizard').value.toLowerCase().trim();
+      const dept = document.getElementById('docDeptWizard').value;
+
+      const filtered = allDoctors.filter(d => {
+        const matchesQuery = !query || d.name.toLowerCase().includes(query) || d.specialization.toLowerCase().includes(query);
+        const matchesDept = !dept || d.specialization === dept;
+        return matchesQuery && matchesDept;
+      });
+
+      renderDoctorCards(filtered);
+    }
+
+    function selectDoctorForBooking(doctor) {
+      selectedDoctor = doctor;
+      document.getElementById('selectedDoctorBadge').textContent = `${doctor.name} (${doctor.specialization})`;
+      document.getElementById('cfmDoctorName').textContent = doctor.name;
+      document.getElementById('cfmDoctorDept').textContent = doctor.specialization;
+      document.getElementById('cfmFee').textContent = `₹${doctor.fee || 500}`;
+      goToWizardStep(2);
+      HMSApp.showToast(`Selected ${doctor.name}`, 'info');
+    }
+
+    function populatePatientDropdown() {
+      const pSel = document.getElementById('wizardPatientSelect');
+      pSel.innerHTML = allPatients.map(p => `
+        <option value="${p.id}" data-name="${p.name}">
+          ${p.name} (${p.id}) - Blood: ${p.bloodGroup}
+        </option>
+      `).join('');
+    }
+
+    function goToWizardStep(step) {
+      [1, 2, 3].forEach(s => {
+        const node = document.getElementById(`hStepNode${s}`);
+        const panel = document.getElementById(`hStepPanel${s}`);
+        if (s === step) {
+          node.classList.add('active');
+          panel.style.display = 'block';
+        } else {
+          node.classList.remove('active');
+          panel.style.display = 'none';
+        }
+      });
+
+      if (step === 3) {
+        // Sync summary
+        const pSel = document.getElementById('wizardPatientSelect');
+        const selectedOpt = pSel.options[pSel.selectedIndex];
+        document.getElementById('cfmPatientName').textContent = selectedOpt.getAttribute('data-name');
+        document.getElementById('cfmPatientId').textContent = `ID: ${pSel.value}`;
+        
+        const dateVal = document.getElementById('wizardDateInput').value;
+        const timeVal = document.getElementById('wizardTimeSelect').value;
+        document.getElementById('cfmDateTime').textContent = `${dateVal} • ${timeVal}`;
+        document.getElementById('cfmReason').textContent = document.getElementById('wizardReasonInput').value || 'General Consultation';
+      }
+    }
+
+    async function confirmAppointmentFromWizard() {
+      const pSel = document.getElementById('wizardPatientSelect');
+      const patientId = pSel.value;
+      const patientName = pSel.options[pSel.selectedIndex].getAttribute('data-name');
+      const date = document.getElementById('wizardDateInput').value;
+      const time = document.getElementById('wizardTimeSelect').value;
+      const reason = document.getElementById('wizardReasonInput').value;
+
+      const newAppt = await HMSApi.appointments.book({
+        patientId,
+        patientName,
+        doctorId: selectedDoctor ? selectedDoctor.id : 'DOC-01',
+        doctorName: selectedDoctor ? selectedDoctor.name : 'Dr. Priya S',
+        department: selectedDoctor ? selectedDoctor.specialization : 'Cardiology',
+        date,
+        time,
+        reason
+      });
+
+      HMSApp.showToast(`Appointment confirmed for ${patientName} with ${selectedDoctor ? selectedDoctor.name : 'Doctor'}!`, 'success');
+
+      // Refresh appointments and switch to list tab
+      allAppointments = await HMSApi.appointments.getAll();
+      filterAppointments();
+
+      const listTabTrigger = document.querySelector('#tab-list-btn');
+      const tab = new bootstrap.Tab(listTabTrigger);
+      tab.show();
+
+      goToWizardStep(1);
+    }
+
+    function renderAppointments(list) {
+      const tbody = document.getElementById('apptTableBody');
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-5">No appointments found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(a => `
+        <tr>
+          <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold">${a.id}</span></td>
+          <td>
+            <div class="fw-semibold text-dark">${a.patientName}</div>
+            <div class="text-muted small">${a.patientId}</div>
+          </td>
+          <td><div class="fw-medium">${a.doctorName}</div></td>
+          <td><span class="badge bg-light text-dark border">${a.department}</span></td>
+          <td>
+            <div class="fw-semibold">${HMSApp.formatDate(a.date)}</div>
+            <div class="text-muted small"><i class="bi bi-clock me-1"></i>${a.time}</div>
+          </td>
+          <td class="text-truncate" style="max-width: 180px;" title="${a.reason}">${a.reason}</td>
+          <td>${HMSApp.renderStatusBadge(a.status)}</td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              <a class="btn btn-outline-primary" href="consultation.html?patientId=${a.patientId}&appointmentId=${a.id}" title="Start Consultation">
+                <i class="bi bi-clipboard2-pulse"></i>
+              </a>
+              <button class="btn btn-outline-warning" title="Reschedule" onclick="promptReschedule('${a.id}', '${a.patientName}', '${a.date}')">
+                <i class="bi bi-clock-history"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function switchTimelineTab(tab) {
+      currentTimeline = tab;
+      document.getElementById('tabAll').classList.toggle('active', tab === 'All');
+      document.getElementById('tabUpcoming').classList.toggle('active', tab === 'Upcoming');
+      document.getElementById('tabPast').classList.toggle('active', tab === 'Past');
+      filterAppointments();
+    }
+
+    function filterAppointments() {
+      const query = document.getElementById('apptSearchInput').value.toLowerCase().trim();
+      const dept = document.getElementById('deptFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const todayStr = '2026-09-16';
+
+      const filtered = allAppointments.filter(a => {
+        const matchesQuery = !query ||
+          a.id.toLowerCase().includes(query) ||
+          a.patientName.toLowerCase().includes(query) ||
+          a.doctorName.toLowerCase().includes(query) ||
+          a.reason.toLowerCase().includes(query);
+
+        const matchesDept = !dept || a.department === dept;
+        const matchesStatus = !status || a.status === status;
+
+        let matchesTimeline = true;
+        if (currentTimeline === 'Upcoming') matchesTimeline = a.date >= todayStr && a.status !== 'Completed' && a.status !== 'Cancelled';
+        if (currentTimeline === 'Past') matchesTimeline = a.date < todayStr || a.status === 'Completed' || a.status === 'Cancelled';
+
+        return matchesQuery && matchesDept && matchesStatus && matchesTimeline;
+      });
+
+      renderAppointments(filtered);
+    }
+
+    function promptReschedule(id, patientName, currentDate) {
+      document.getElementById('rescheduleApptId').value = id;
+      document.getElementById('reschedulePatientLabel').textContent = `Rescheduling for: ${patientName} (Current Date: ${currentDate})`;
+      document.getElementById('newApptDate').value = currentDate;
+      const modal = new bootstrap.Modal(document.getElementById('rescheduleModal'));
+      modal.show();
+    }
+
+    async function handleRescheduleSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('rescheduleApptId').value;
+      const newDate = document.getElementById('newApptDate').value;
+      const newTime = document.getElementById('newApptTime').value;
+
+      await HMSApi.appointments.reschedule(id, newDate, newTime);
+      bootstrap.Modal.getInstance(document.getElementById('rescheduleModal')).hide();
+      HMSApp.showToast(`Appointment rescheduled to ${newDate} at ${newTime}`, 'info');
+      allAppointments = await HMSApi.appointments.getAll();
+      filterAppointments();
+    }
+  </script>
+</body>
+</html>

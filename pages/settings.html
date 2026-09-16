@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings & System Configuration - MedPulse HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- HEADER -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+          <div>
+            <h2 class="fw-bold mb-1">Hospital & System Settings</h2>
+            <p class="text-muted mb-0 small">Manage clinic profile, staff sessions, system defaults, and backend integration parameters.</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- LEFT COLUMN: USER PROFILE -->
+          <div class="col-12 col-lg-5">
+            <div class="hms-card">
+              <div class="hms-card-header">
+                <h5 class="hms-card-title"><i class="bi bi-person-circle text-primary"></i> Active User Profile</h5>
+              </div>
+              <div class="hms-card-body">
+                <div class="text-center mb-4">
+                  <img id="setProfileAvatar" src="" class="rounded-circle border border-3 border-primary shadow-sm mb-2" width="80" height="80" style="object-fit: cover;">
+                  <h5 class="fw-bold mb-0" id="setProfileName">Dr. Arthur Pendelton</h5>
+                  <span class="badge bg-primary px-3 py-1 mt-1" id="setProfileRole">Admin</span>
+                </div>
+
+                <form onsubmit="handleSaveProfile(event)">
+                  <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="setInputName" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="setInputEmail" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Job Title / Designation</label>
+                    <input type="text" class="form-control" id="setInputTitle">
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-check2 me-1"></i> Update Profile Information
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- RESET DATA WIDGET -->
+            <div class="card border-0 rounded-4 shadow-sm bg-white p-4">
+              <h6 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> Reset Prototype Data</h6>
+              <p class="text-muted small mb-3">
+                If you have added, edited, or deleted records during your evaluation and want to return to the pristine initial hospital sample dataset, click below.
+              </p>
+              <button class="btn btn-outline-danger w-100" onclick="handleResetData()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All Data to Default
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: HOSPITAL INFO & PHP ARCHITECTURE -->
+          <div class="col-12 col-lg-7">
+            <!-- HOSPITAL PROFILE -->
+            <div class="hms-card mb-4">
+              <div class="hms-card-header">
+                <h5 class="hms-card-title"><i class="bi bi-hospital text-primary"></i> Healthcare Facility Details</h5>
+              </div>
+              <div class="hms-card-body">
+                <div class="row g-3">
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Facility Name</label>
+                    <input type="text" class="form-control" value="MedPulse Multi-Speciality Hospital" readonly>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Hospital Registration / NPI</label>
+                    <input type="text" class="form-control" value="HOSP-NY-88319-A" readonly>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Physical Campus Address</label>
+                    <input type="text" class="form-control" value="742 Healthcare Avenue, Medical District, Springfield" readonly>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Emergency Helpline</label>
+                    <input type="text" class="form-control" value="+1 (555) 911-0000" readonly>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Accreditation</label>
+                    <input type="text" class="form-control" value="JCI Accredited & NABH Level 1" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FUTURE PHP BACKEND ARCHITECTURE INFO -->
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-light border-start border-4 border-primary">
+              <h5 class="fw-bold text-dark mb-2"><i class="bi bi-code-slash text-primary me-2"></i> Architecture Ready for PHP / MySQL Backend</h5>
+              <p class="text-secondary small mb-3">
+                This frontend is built with strict separation between UI rendering and the data persistence layer. When you are ready to connect your PHP backend:
+              </p>
+              <div class="list-group list-group-flush small bg-white rounded-3 border p-2 mb-3">
+                <div class="list-group-item border-0 py-2">
+                  <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i> <strong>Data Isolation:</strong> All data transactions run through <code>assets/js/apiService.js</code>.
+                </div>
+                <div class="list-group-item border-0 py-2">
+                  <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i> <strong>Easy PHP Fetch:</strong> Simply replace the internal functions in <code>HMSApi</code> with standard <code>fetch('/api/*.php')</code> calls.
+                </div>
+                <div class="list-group-item border-0 py-2">
+                  <i class="bi bi-arrow-right-circle-fill text-primary me-2"></i> <strong>Form Field Standardization:</strong> Form inputs and payload structures mirror standard MySQL relational schemas (patients, doctors, appointments, bills, consultations).
+                </div>
+              </div>
+              <div class="small text-muted">
+                File: <code>/assets/js/apiService.js</code> • Fully documented with future PHP endpoints.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      HMSNav.init('settings', 'System Settings', ['Home', 'Settings']);
+      loadProfile();
+    });
+
+    function loadProfile() {
+      const user = HMSAuth.getCurrentUser();
+      document.getElementById('setProfileAvatar').src = user.avatar;
+      document.getElementById('setProfileName').textContent = user.name;
+      document.getElementById('setProfileRole').textContent = user.role;
+      document.getElementById('setInputName').value = user.name;
+      document.getElementById('setInputEmail').value = user.email;
+      document.getElementById('setInputTitle').value = user.title || user.role;
+    }
+
+    function handleSaveProfile(e) {
+      e.preventDefault();
+      const user = HMSAuth.getCurrentUser();
+      user.name = document.getElementById('setInputName').value;
+      user.email = document.getElementById('setInputEmail').value;
+      user.title = document.getElementById('setInputTitle').value;
+      HMSAuth.setCurrentUser(user);
+
+      HMSApp.showToast('Profile updated successfully!', 'success');
+      loadProfile();
+      HMSNav.init('settings', 'System Settings', ['Home', 'Settings']);
+    }
+
+    function handleResetData() {
+      if (confirm('Reset all hospital data back to factory dummy defaults? Any changes made during testing will be reset.')) {
+        HMSDataStore.resetToDefault();
+        HMSApp.showToast('Data reset to default successfully. Reloading...', 'success');
+        setTimeout(() => {
+          window.location.reload();
+        }, 600);
+      }
+    }
+  </script>
+</body>
+</html>

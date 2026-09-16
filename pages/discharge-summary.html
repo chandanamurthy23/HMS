@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discharge Summary - HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- PATIENT BANNER (Reference Image Screen 10: Rahul K, H1042) -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+          <div class="card-body p-3 p-md-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-info-subtle text-info fw-bold d-inline-flex align-items-center justify-content-center fs-4" style="width: 52px; height: 52px;">
+                  RK
+                </div>
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <h4 class="fw-bold mb-0 text-dark" id="dsBannerName">Rahul K</h4>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="dsBannerId">H1042</span>
+                  </div>
+                  <div class="text-muted small mt-1">
+                    Age: <span id="dsBannerAge">42</span> • 
+                    Gender: <span id="dsBannerGender">Male</span> • 
+                    Consultant: <strong class="text-dark">Dr. Priya S (Cardiology / Internal Med)</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <button class="btn btn-outline-primary" onclick="window.print()">
+                  <i class="bi bi-printer me-1"></i> Print Summary
+                </button>
+                <button class="btn btn-primary fw-semibold" onclick="downloadDischargePDF()">
+                  <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE DISCHARGE SUMMARY CARD (Reference Image Screen 10) -->
+        <div class="hms-card mb-4" id="activeDischargeCard">
+          <div class="hms-card-header bg-light">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-file-earmark-medical-fill text-primary fs-5"></i>
+              <h5 class="hms-card-title mb-0">Discharge Summary & Clinical Report</h5>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">Discharged & Stable</span>
+          </div>
+
+          <div class="p-4">
+            <div class="row g-4 mb-3">
+              <div class="col-12 col-md-6">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">Final Clinical Diagnosis</h6>
+                <p class="text-secondary mb-0" id="dsActiveDiagnosis">
+                  Acute Bronchial Spasm & Lower Respiratory Tract Infection.
+                </p>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">Hospital Course & Treatment Administered</h6>
+                <p class="text-secondary mb-0" id="dsActiveTreatment">
+                  Nebulization with Budesonide, IV Ceftriaxone 1g BD, Oral Bronchodilators, Chest Physiotherapy.
+                </p>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">Condition At Discharge</h6>
+                <p class="text-secondary mb-0" id="dsActiveCondition">
+                  Afebrile, Hemodynamically stable, Chest clear on auscultation, SpO2 98% on room air. Ambulating comfortably.
+                </p>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">Discharge Medications</h6>
+                <ul class="mb-0 ps-3 text-secondary" id="dsActiveMeds">
+                  <li>Levosalbutamol Inhaler (2 puffs as needed)</li>
+                  <li>Amoxicillin + Clavulanate 625mg twice daily for 5 days</li>
+                  <li>Montelukast 10mg once daily at bedtime for 14 days</li>
+                </ul>
+              </div>
+
+              <div class="col-12">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-2">Physician Notes & Recommendations</h6>
+                <p class="text-secondary mb-0" id="dsActiveNotes">
+                  Avoid exposure to dust, sudden cold air, and known airborne allergens. Continue steam inhalation twice daily for 5 days. Return for OPD follow-up on 2026-09-24 or earlier if breathing difficulty returns.
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+                <i class="bi bi-printer me-1"></i> Print Document
+              </button>
+              <button type="button" class="btn btn-danger" onclick="downloadDischargePDF()">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALL DISCHARGE SUMMARIES ARCHIVE -->
+        <div class="hms-card">
+          <div class="hms-card-header">
+            <h5 class="hms-card-title">Inpatient Discharge Directory</h5>
+            <span class="badge bg-light text-muted border">Medical Records</span>
+          </div>
+          <div class="table-responsive">
+            <table class="hms-table align-middle text-nowrap">
+              <thead>
+                <tr>
+                  <th>Summary ID</th>
+                  <th>Patient</th>
+                  <th>Admission Date</th>
+                  <th>Discharge Date</th>
+                  <th>Consultant</th>
+                  <th>Diagnosis</th>
+                  <th>Discharge Condition</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+              <tbody id="allDsTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    let allSummaries = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      HMSNav.init('discharge-summary', 'Discharge Summary', ['Home', 'Clinical', 'Discharge Summary']);
+      await loadDischargeSummaries();
+    });
+
+    async function loadDischargeSummaries() {
+      allSummaries = await HMSApi.discharge.getAll();
+      renderArchiveTable(allSummaries);
+    }
+
+    function renderArchiveTable(summaries) {
+      const tbody = document.getElementById('allDsTableBody');
+      tbody.innerHTML = summaries.map(ds => `
+        <tr>
+          <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold">${ds.id}</span></td>
+          <td>
+            <div class="fw-semibold text-dark">${ds.patientName}</div>
+            <div class="text-muted small">${ds.patientId}</div>
+          </td>
+          <td>${HMSApp.formatDate(ds.admissionDate)}</td>
+          <td>${HMSApp.formatDate(ds.dischargeDate)}</td>
+          <td>${ds.doctor}</td>
+          <td class="text-truncate" style="max-width: 200px;" title="${ds.diagnosis}">${ds.diagnosis}</td>
+          <td><span class="badge bg-success-subtle text-success">Stable</span></td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary" onclick="viewSummaryDetails('${ds.id}')">
+              <i class="bi bi-eye"></i> View
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function viewSummaryDetails(summaryId) {
+      const ds = allSummaries.find(s => s.id === summaryId);
+      if (!ds) return;
+
+      document.getElementById('dsBannerName').textContent = ds.patientName;
+      document.getElementById('dsBannerId').textContent = ds.patientId;
+      document.getElementById('dsBannerAge').textContent = ds.age;
+      document.getElementById('dsBannerGender').textContent = ds.gender;
+      document.getElementById('dsActiveDiagnosis').textContent = ds.diagnosis;
+      document.getElementById('dsActiveTreatment').textContent = ds.treatment;
+      document.getElementById('dsActiveCondition').textContent = ds.conditionAtDischarge;
+      document.getElementById('dsActiveNotes').textContent = ds.doctorNotes;
+
+      const medsUl = document.getElementById('dsActiveMeds');
+      if (ds.medicines && ds.medicines.length > 0) {
+        medsUl.innerHTML = ds.medicines.map(m => `<li>${m}</li>`).join('');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function downloadDischargePDF() {
+      HMSApp.showToast('Generating official Discharge Summary PDF...', 'info');
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  </script>
+</body>
+</html>

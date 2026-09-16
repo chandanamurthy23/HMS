@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration & Directory - HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- TOP TABS: REGISTRATION WIZARD VS PATIENT DIRECTORY -->
+        <ul class="nav nav-pills scrollable-tabs mb-4 gap-2 bg-white p-2 rounded-3 border shadow-sm" id="patientTabNav" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 fw-semibold" id="tab-register-btn" data-bs-toggle="pill" data-bs-target="#tab-register" type="button" role="tab">
+              <i class="bi bi-person-plus-fill me-1"></i> Patient Registration (3-Step Wizard)
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 fw-semibold" id="tab-directory-btn" data-bs-toggle="pill" data-bs-target="#tab-directory" type="button" role="tab">
+              <i class="bi bi-people-fill me-1"></i> Patient Directory & Records
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          
+          <!-- TAB 1: 3-STEP VERTICAL WIZARD REGISTRATION (Reference Image Screen 3) -->
+          <div class="tab-pane fade show active" id="tab-register" role="tabpanel">
+            <div class="row g-4">
+              
+              <!-- LEFT COLUMN: VERTICAL STEPPER -->
+              <div class="col-12 col-lg-4">
+                <div class="hms-card p-4">
+                  <h5 class="fw-bold mb-1 text-dark">Patient Registration</h5>
+                  <p class="text-muted small mb-4">Complete all 3 stages to register an outpatient or inpatient.</p>
+
+                  <div class="wizard-vertical-nav">
+                    <div class="wizard-v-step active" id="vStepIndicator1" onclick="goToStep(1)">
+                      <div class="wizard-v-circle">1</div>
+                      <div>
+                        <div>Personal Details</div>
+                        <span class="text-muted" style="font-size: 0.75rem; font-weight: 400;">Name, age, gender & ID</span>
+                      </div>
+                    </div>
+
+                    <div class="wizard-v-step" id="vStepIndicator2" onclick="goToStep(2)">
+                      <div class="wizard-v-circle">2</div>
+                      <div>
+                        <div>Contact Details</div>
+                        <span class="text-muted" style="font-size: 0.75rem; font-weight: 400;">Phone, email & address</span>
+                      </div>
+                    </div>
+
+                    <div class="wizard-v-step" id="vStepIndicator3" onclick="goToStep(3)">
+                      <div class="wizard-v-circle">3</div>
+                      <div>
+                        <div>Medical History</div>
+                        <span class="text-muted" style="font-size: 0.75rem; font-weight: 400;">Allergies & past medical history</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 p-3 bg-light rounded-3 border">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <i class="bi bi-shield-check text-primary fs-5"></i>
+                      <span class="fw-bold small text-dark">Data Security Notice</span>
+                    </div>
+                    <p class="text-muted mb-0" style="font-size: 0.75rem;">All patient records are encrypted and compliant with medical confidentiality standards.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT COLUMN: FORM PANELS -->
+              <div class="col-12 col-lg-8">
+                <div class="hms-card p-4">
+                  <form id="wizardForm" onsubmit="handleWizardSubmit(event)">
+                    
+                    <!-- STEP 1: PERSONAL DETAILS -->
+                    <div id="stepPanel1">
+                      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                        <h5 class="fw-bold mb-0 text-primary">Step 1: Personal Details</h5>
+                        <span class="badge bg-primary-subtle text-primary">Stage 1 of 3</span>
+                      </div>
+
+                      <div class="row g-3">
+                        <div class="col-12 col-md-4">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Patient ID</label>
+                          <input type="text" class="form-control bg-light fw-bold text-primary" id="wzPatientId" value="H1268" readonly>
+                          <div class="form-text small">System generated identifier</div>
+                        </div>
+
+                        <div class="col-12 col-md-8">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Full Name <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="wzFullName" placeholder="e.g. Sneha R" value="Sneha R" required>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Age <span class="text-danger">*</span></label>
+                          <input type="number" class="form-control" id="wzAge" placeholder="28" value="28" min="1" max="120" required>
+                        </div>
+
+                        <div class="col-6 col-md-4">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Gender <span class="text-danger">*</span></label>
+                          <select class="form-select" id="wzGender" required>
+                            <option value="Female" selected>Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Blood Group <span class="text-danger">*</span></label>
+                          <select class="form-select" id="wzBloodGroup" required>
+                            <option value="O+" selected>O+</option>
+                            <option value="A+">A+</option>
+                            <option value="B+">B+</option>
+                            <option value="AB+">AB+</option>
+                            <option value="O-">O-</option>
+                            <option value="A-">A-</option>
+                            <option value="B-">B-</option>
+                            <option value="AB-">AB-</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="mt-4 pt-3 border-top d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary px-4" onclick="goToStep(2)">
+                          Next: Contact Details <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- STEP 2: CONTACT DETAILS -->
+                    <div id="stepPanel2" style="display: none;">
+                      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                        <h5 class="fw-bold mb-0 text-primary">Step 2: Contact Details</h5>
+                        <span class="badge bg-primary-subtle text-primary">Stage 2 of 3</span>
+                      </div>
+
+                      <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Phone Number <span class="text-danger">*</span></label>
+                          <input type="tel" class="form-control" id="wzPhone" placeholder="+91 98765 43210" value="+91 98450 12345" required>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Email Address</label>
+                          <input type="email" class="form-control" id="wzEmail" placeholder="sneha.r@example.com" value="sneha.r@example.com">
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Residential Address</label>
+                          <input type="text" class="form-control" id="wzAddress" placeholder="42nd Cross, 7th Block, Jayanagar, Bengaluru" value="42nd Cross, 7th Block, Bengaluru">
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Emergency Contact Name & Phone</label>
+                          <input type="text" class="form-control" id="wzEmergency" placeholder="Ramesh R (Father) - +91 98450 99999" value="Ramesh R (Father) - +91 98450 99999">
+                        </div>
+                      </div>
+
+                      <div class="mt-4 pt-3 border-top d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="goToStep(1)">
+                          <i class="bi bi-arrow-left me-1"></i> Back
+                        </button>
+                        <button type="button" class="btn btn-primary px-4" onclick="goToStep(3)">
+                          Next: Medical History <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- STEP 3: MEDICAL HISTORY -->
+                    <div id="stepPanel3" style="display: none;">
+                      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                        <h5 class="fw-bold mb-0 text-primary">Step 3: Medical History</h5>
+                        <span class="badge bg-primary-subtle text-primary">Stage 3 of 3</span>
+                      </div>
+
+                      <div class="row g-3">
+                        <div class="col-12">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Known Drug / Food Allergies</label>
+                          <input type="text" class="form-control" id="wzAllergies" placeholder="e.g. Penicillin, Sulfa drugs, Peanuts" value="Penicillin (Mild rash)">
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Chronic Conditions & Existing Diagnoses</label>
+                          <input type="text" class="form-control" id="wzChronic" placeholder="e.g. Hypertension, Type 2 Diabetes, Asthma" value="Mild Hypertension">
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label fw-semibold" style="font-size: 0.88rem;">Past Surgeries & Clinical Notes</label>
+                          <textarea class="form-control" id="wzHistoryNotes" rows="4" placeholder="Appendectomy in 2021, regular vitamins."></textarea>
+                        </div>
+                      </div>
+
+                      <div class="mt-4 pt-3 border-top d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="goToStep(2)">
+                          <i class="bi bi-arrow-left me-1"></i> Back
+                        </button>
+                        <button type="submit" class="btn btn-success px-4 fw-semibold">
+                          <i class="bi bi-check2-circle me-1"></i> Submit Registration
+                        </button>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 2: PATIENT DIRECTORY & RECORDS -->
+          <div class="tab-pane fade" id="tab-directory" role="tabpanel">
+            <!-- SEARCH & FILTER TOOLBAR -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+              <div class="card-body p-3">
+                <div class="row g-2 align-items-center">
+                  <div class="col-12 col-md-5">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+                      <input type="text" class="form-control" id="patientSearchInput" placeholder="Search by Patient ID, Name, Phone, or Email...">
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <select class="form-select form-select-sm" id="genderFilter" onchange="filterPatients()">
+                      <option value="">All Genders</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <select class="form-select form-select-sm" id="bloodFilter" onchange="filterPatients()">
+                      <option value="">All Blood Groups</option>
+                      <option value="O+">O+</option>
+                      <option value="A+">A+</option>
+                      <option value="B+">B+</option>
+                      <option value="AB+">AB+</option>
+                      <option value="O-">O-</option>
+                      <option value="A-">A-</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-md-1 text-md-end">
+                    <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetFilters()" title="Reset Filters">
+                      <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PATIENT TABLE -->
+            <div class="hms-table-wrapper">
+              <div class="table-responsive">
+                <table class="hms-table align-middle text-nowrap" id="patientTable">
+                  <thead>
+                    <tr>
+                      <th>Patient ID</th>
+                      <th>Full Name</th>
+                      <th>Age / Gender</th>
+                      <th>Contact Phone</th>
+                      <th>Blood Group</th>
+                      <th>Registered</th>
+                      <th>Status</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="patientTableBody">
+                    <!-- Loaded via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW PATIENT DETAILS -->
+  <div class="modal fade" id="patientViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary fs-6" id="vPatientId">H1268</span>
+            <h5 class="modal-title fw-bold text-dark" id="vPatientName">Patient Full Name</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="patientViewBody">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="#" id="vBookApptBtn" class="btn btn-primary">
+            <i class="bi bi-calendar-plus me-1"></i> Book Appointment
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DELETE CONFIRMATION -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center p-4">
+          <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-2"></i>
+          <h5 class="fw-bold">Delete Patient?</h5>
+          <p class="text-muted small mb-4">Are you sure you want to delete <strong id="deletePatientName"></strong>? This record will be removed from the registry.</p>
+          <div class="d-flex justify-content-center gap-2">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    let currentStep = 1;
+    let allPatients = [];
+    let patientToDeleteId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      HMSNav.init('patients', 'Patient Registration & Records', ['Home', 'Patient Management']);
+      await loadPatients();
+
+      // Check if ID exists or generate
+      generateNextPatientId();
+
+      document.getElementById('patientSearchInput').addEventListener('input', filterPatients);
+    });
+
+    function goToStep(step) {
+      currentStep = step;
+      [1, 2, 3].forEach(s => {
+        const indicator = document.getElementById(`vStepIndicator${s}`);
+        const panel = document.getElementById(`stepPanel${s}`);
+        if (s === step) {
+          indicator.classList.add('active');
+          panel.style.display = 'block';
+        } else {
+          indicator.classList.remove('active');
+          panel.style.display = 'none';
+        }
+      });
+    }
+
+    async function generateNextPatientId() {
+      const patients = await HMSApi.patients.getAll();
+      const existing = patients.find(p => p.id === 'H1268');
+      if (!existing) {
+        document.getElementById('wzPatientId').value = 'H1268';
+      } else {
+        const nextNum = 1269 + patients.length;
+        document.getElementById('wzPatientId').value = `H${nextNum}`;
+      }
+    }
+
+    async function handleWizardSubmit(e) {
+      e.preventDefault();
+      
+      const newPatient = {
+        id: document.getElementById('wzPatientId').value,
+        name: document.getElementById('wzFullName').value,
+        age: document.getElementById('wzAge').value,
+        gender: document.getElementById('wzGender').value,
+        bloodGroup: document.getElementById('wzBloodGroup').value,
+        phone: document.getElementById('wzPhone').value,
+        email: document.getElementById('wzEmail').value,
+        address: document.getElementById('wzAddress').value,
+        emergencyContact: document.getElementById('wzEmergency').value,
+        medicalHistory: `Allergies: ${document.getElementById('wzAllergies').value}. Conditions: ${document.getElementById('wzChronic').value}. Notes: ${document.getElementById('wzHistoryNotes').value}`,
+        status: 'Active'
+      };
+
+      await HMSApi.patients.create(newPatient);
+      HMSApp.showToast(`Patient ${newPatient.name} (${newPatient.id}) registered successfully!`, 'success');
+
+      // Refresh table and switch to Directory tab
+      await loadPatients();
+      const dirTabTrigger = document.querySelector('#tab-directory-btn');
+      const tab = new bootstrap.Tab(dirTabTrigger);
+      tab.show();
+
+      // Reset wizard
+      document.getElementById('wizardForm').reset();
+      generateNextPatientId();
+      goToStep(1);
+    }
+
+    async function loadPatients() {
+      allPatients = await HMSApi.patients.getAll();
+      renderPatientTable(allPatients);
+    }
+
+    function renderPatientTable(patients) {
+      const tbody = document.getElementById('patientTableBody');
+      if (patients.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-5">No patient records found matching criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = patients.map(p => `
+        <tr>
+          <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold">${p.id}</span></td>
+          <td>
+            <div class="fw-semibold text-dark">${p.name}</div>
+            <div class="text-muted" style="font-size: 0.75rem;">${p.email || 'No email'}</div>
+          </td>
+          <td>${p.age} yrs • ${p.gender}</td>
+          <td><span class="text-dark fw-medium">${p.phone}</span></td>
+          <td><span class="badge bg-danger-subtle text-danger fw-bold">${p.bloodGroup}</span></td>
+          <td class="text-muted small">${HMSApp.formatDate(p.registeredDate)}</td>
+          <td>${HMSApp.renderStatusBadge(p.status)}</td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-outline-primary" title="View Patient" onclick="viewPatient('${p.id}')">
+                <i class="bi bi-eye"></i>
+              </button>
+              <a href="appointments.html?patientId=${p.id}&patientName=${encodeURIComponent(p.name)}" class="btn btn-outline-success" title="Book Appointment">
+                <i class="bi bi-calendar-plus"></i>
+              </a>
+              <button class="btn btn-outline-danger" title="Delete Patient" onclick="promptDeletePatient('${p.id}', '${p.name}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterPatients() {
+      const query = document.getElementById('patientSearchInput').value.toLowerCase().trim();
+      const gender = document.getElementById('genderFilter').value;
+      const blood = document.getElementById('bloodFilter').value;
+
+      const filtered = allPatients.filter(p => {
+        const matchesQuery = !query || 
+          p.id.toLowerCase().includes(query) ||
+          p.name.toLowerCase().includes(query) ||
+          p.phone.toLowerCase().includes(query) ||
+          (p.email && p.email.toLowerCase().includes(query));
+
+        const matchesGender = !gender || p.gender === gender;
+        const matchesBlood = !blood || p.bloodGroup === blood;
+
+        return matchesQuery && matchesGender && matchesBlood;
+      });
+
+      renderPatientTable(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('patientSearchInput').value = '';
+      document.getElementById('genderFilter').value = '';
+      document.getElementById('bloodFilter').value = '';
+      renderPatientTable(allPatients);
+    }
+
+    async function viewPatient(id) {
+      const p = await HMSApi.patients.getById(id);
+      if (!p) return;
+
+      document.getElementById('vPatientId').textContent = p.id;
+      document.getElementById('vPatientName').textContent = p.name;
+      document.getElementById('vBookApptBtn').href = `appointments.html?patientId=${p.id}&patientName=${encodeURIComponent(p.name)}`;
+
+      const body = document.getElementById('patientViewBody');
+      body.innerHTML = `
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <div class="p-3 bg-light rounded-3 text-center">
+              <div class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center fw-bold fs-2 mb-2" style="width:70px; height:70px;">
+                ${p.name.split(' ').map(n=>n[0]).join('')}
+              </div>
+              <h5 class="fw-bold mb-0">${p.name}</h5>
+              <p class="text-muted small mb-2">${p.gender}, ${p.age} years old</p>
+              <span class="badge bg-danger fs-6 px-3 py-1">Blood: ${p.bloodGroup}</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-8">
+            <div class="card border-0 bg-light p-3 rounded-3">
+              <h6 class="fw-bold border-bottom pb-2 mb-3">Contact & Demographic Details</h6>
+              <div class="row g-2 small">
+                <div class="col-6"><strong>Phone:</strong> <span class="text-dark">${p.phone}</span></div>
+                <div class="col-6"><strong>Email:</strong> <span class="text-dark">${p.email || 'N/A'}</span></div>
+                <div class="col-6"><strong>Patient ID:</strong> <span class="text-primary fw-bold">${p.id}</span></div>
+                <div class="col-6"><strong>Status:</strong> ${HMSApp.renderStatusBadge(p.status)}</div>
+                <div class="col-12 mt-2"><strong>Address:</strong> <span class="text-muted">${p.address || 'N/A'}</span></div>
+                <div class="col-12 mt-1"><strong>Emergency:</strong> <span class="text-danger fw-medium">${p.emergencyContact || 'N/A'}</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card border-0 bg-light p-3 rounded-3">
+              <h6 class="fw-bold border-bottom pb-2 mb-2"><i class="bi bi-heart-pulse-fill text-danger me-1"></i> Medical History & Allergies</h6>
+              <p class="mb-0 small text-dark">${p.medicalHistory || 'No prior conditions documented.'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const modal = new bootstrap.Modal(document.getElementById('patientViewModal'));
+      modal.show();
+    }
+
+    function promptDeletePatient(id, name) {
+      patientToDeleteId = id;
+      document.getElementById('deletePatientName').textContent = name;
+      const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+      modal.show();
+
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        if (patientToDeleteId) {
+          await HMSApi.patients.delete(patientToDeleteId);
+          HMSApp.showToast(`Patient record deleted.`, 'danger');
+          modal.hide();
+          await loadPatients();
+        }
+      };
+    }
+  </script>
+</body>
+</html>

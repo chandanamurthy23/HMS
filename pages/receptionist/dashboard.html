@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - HMS Hospital Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- 4 PASTEL STAT CARDS (Reference Image Screen 2) -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-blue">
+              <div class="stat-pastel-title">
+                <i class="bi bi-people-fill text-primary"></i> Total Patients
+              </div>
+              <div class="stat-pastel-count" id="statTotalPatients">1,240</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-green">
+              <div class="stat-pastel-title">
+                <i class="bi bi-calendar2-check-fill text-success"></i> Today's Appointments
+              </div>
+              <div class="stat-pastel-count" id="statTodayAppointments">48</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-purple">
+              <div class="stat-pastel-title">
+                <i class="bi bi-person-badge-fill" style="color: #9333ea;"></i> Doctors
+              </div>
+              <div class="stat-pastel-count" id="statDoctors">12</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-orange">
+              <div class="stat-pastel-title">
+                <i class="bi bi-hospital-fill text-warning"></i> Rooms / Active
+              </div>
+              <div class="stat-pastel-count" id="statRooms">8</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN LAYOUT: APPOINTMENTS TABLE (8 COLS) + CALENDAR & ACTIVITIES (4 COLS) -->
+        <div class="row g-4">
+          
+          <!-- LEFT 8 COLS: TODAY'S APPOINTMENTS -->
+          <div class="col-12 col-lg-8">
+            <div class="hms-card">
+              <div class="hms-card-header">
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="hms-card-title mb-0">Today's Appointments</h5>
+                  <span class="badge bg-primary-subtle text-primary rounded-pill">Real-time</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#quickBookModal">
+                    <i class="bi bi-plus-lg me-1"></i> New Appointment
+                  </button>
+                  <a href="../appointments.html" class="btn btn-sm btn-light border">View All</a>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="hms-table align-middle text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+                      <th>Assigned Doctor</th>
+                      <th>Date & Time</th>
+                      <th>Status</th>
+                      <th class="text-end">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="todayApptsTableBody">
+                    <!-- Loaded dynamically via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- WAITING ROOM QUICK QUEUE -->
+            <div class="hms-card">
+              <div class="hms-card-header">
+                <h5 class="hms-card-title">
+                  <i class="bi bi-clock-history text-warning me-1"></i> Front Desk Check-in & Waiting Lobby
+                </h5>
+                <a href="../waiting-time.html" class="btn btn-sm btn-outline-primary">Full Waiting Room</a>
+              </div>
+              <div class="table-responsive">
+                <table class="hms-table text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+                      <th>Token</th>
+                      <th>Doctor</th>
+                      <th>Check-In</th>
+                      <th>Wait Status</th>
+                      <th class="text-end">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="waitingQueueBody">
+                    <!-- Loaded via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT 4 COLS: CALENDAR & RECENT ACTIVITIES (Reference Image Screen 2) -->
+          <div class="col-12 col-lg-4">
+            
+            <!-- MONTHLY CALENDAR WIDGET (< April 2025 >) -->
+            <div class="hms-card p-3">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <button class="btn btn-sm btn-light border p-1 px-2" onclick="changeMonth(-1)">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <h6 class="fw-bold mb-0 text-dark" id="calendarMonthHeader">&lt; April 2025 &gt;</h6>
+                <button class="btn btn-sm btn-light border p-1 px-2" onclick="changeMonth(1)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+
+              <div class="calendar-grid mb-2">
+                <div class="calendar-day-header">Su</div>
+                <div class="calendar-day-header">Mo</div>
+                <div class="calendar-day-header">Tu</div>
+                <div class="calendar-day-header">We</div>
+                <div class="calendar-day-header">Th</div>
+                <div class="calendar-day-header">Fr</div>
+                <div class="calendar-day-header">Sa</div>
+              </div>
+
+              <div class="calendar-grid" id="calendarDaysGrid">
+                <!-- Dynamically generated days -->
+              </div>
+            </div>
+
+            <!-- RECENT ACTIVITIES (Reference Image Screen 2) -->
+            <div class="hms-card">
+              <div class="hms-card-header">
+                <h5 class="hms-card-title">Recent Activities</h5>
+                <span class="badge bg-light text-muted border">Live Feed</span>
+              </div>
+              <div class="p-3">
+                <div class="d-flex flex-column gap-3" id="recentActivitiesList">
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="p-2 rounded-circle bg-primary-subtle text-primary mt-1">
+                      <i class="bi bi-calendar-check fs-6"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold text-dark" style="font-size: 0.85rem;">Sneha R booked appointment</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">Cardiology with Dr. Priya S</div>
+                      <div class="text-primary" style="font-size: 0.7rem;">10 mins ago</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="p-2 rounded-circle bg-success-subtle text-success mt-1">
+                      <i class="bi bi-check2-circle fs-6"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold text-dark" style="font-size: 0.85rem;">Rahul K discharged</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">Discharge summary generated (Ward 3B)</div>
+                      <div class="text-success" style="font-size: 0.7rem;">45 mins ago</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="p-2 rounded-circle bg-info-subtle text-info mt-1">
+                      <i class="bi bi-file-earmark-medical fs-6"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold text-dark" style="font-size: 0.85rem;">Lab report approved</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">Blood Lipid Profile for Ananya P</div>
+                      <div class="text-info" style="font-size: 0.7rem;">2 hours ago</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start gap-2">
+                    <div class="p-2 rounded-circle bg-warning-subtle text-warning mt-1">
+                      <i class="bi bi-receipt-cutoff fs-6"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold text-dark" style="font-size: 0.85rem;">Invoice #INV-2026-001 settled</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">₹1,750 paid by Vikram S</div>
+                      <div class="text-muted" style="font-size: 0.7rem;">3 hours ago</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: QUICK BOOK APPOINTMENT -->
+  <div class="modal fade" id="quickBookModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form onsubmit="handleQuickBook(event)">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold"><i class="bi bi-calendar-plus text-primary me-2"></i> Book Appointment</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Select Patient <span class="text-danger">*</span></label>
+              <select class="form-select" id="qbPatientSelect" required>
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Select Doctor <span class="text-danger">*</span></label>
+              <select class="form-select" id="qbDoctorSelect" required>
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label">Date <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="qbDate" required value="2026-09-16">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Time Slot <span class="text-danger">*</span></label>
+                <select class="form-select" id="qbTime" required>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="10:30 AM">10:30 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="02:30 PM">02:30 PM</option>
+                  <option value="04:00 PM">04:00 PM</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Reason for Visit</label>
+              <input type="text" class="form-control" id="qbReason" placeholder="General Consultation" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-calendar-check"></i> Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../data/dummyData.js"></script>
+  <script src="../../assets/js/dataStore.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/apiService.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/navigation.js"></script>
+
+  <script>
+    let currentCalMonth = 3; // 0-indexed: 3 = April
+    let currentCalYear = 2025;
+    let selectedDate = 16;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      HMSNav.init('dashboard', 'Dashboard', ['Home', 'Dashboard']);
+      renderCalendar(currentCalMonth, currentCalYear);
+      await loadDashboardData();
+    });
+
+    async function loadDashboardData() {
+      const appointments = await HMSApi.appointments.getAll();
+      const queue = await HMSApi.waitingQueue.getAll();
+      const doctors = await HMSApi.doctors.getAll();
+      const patients = await HMSApi.patients.getAll();
+
+      // Render today's appointments table
+      const tbody = document.getElementById('todayApptsTableBody');
+      tbody.innerHTML = appointments.slice(0, 6).map(a => `
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold" style="width:34px; height:34px; font-size: 0.8rem;">
+                ${a.patientName.split(' ').map(n=>n[0]).join('')}
+              </div>
+              <div>
+                <div class="fw-semibold text-dark" style="font-size: 0.88rem;">${a.patientName}</div>
+                <div class="text-muted" style="font-size: 0.75rem;">${a.patientId || 'H1268'}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="fw-medium text-dark" style="font-size: 0.85rem;">${a.doctorName}</div>
+            <div class="text-muted" style="font-size: 0.75rem;">${a.department}</div>
+          </td>
+          <td>
+            <div class="fw-semibold text-dark" style="font-size: 0.85rem;">${a.time}</div>
+            <div class="text-muted" style="font-size: 0.75rem;">${a.date}</div>
+          </td>
+          <td>
+            ${HMSApp.renderStatusBadge(a.status)}
+          </td>
+          <td class="text-end">
+            <a href="../consultation.html?patientId=${a.patientId || 'H1268'}" class="btn btn-sm btn-outline-primary" title="Start Consultation">
+              <i class="bi bi-clipboard2-pulse"></i> Details
+            </a>
+          </td>
+        </tr>
+      `).join('');
+
+      // Waiting Queue Table
+      const qbody = document.getElementById('waitingQueueBody');
+      qbody.innerHTML = queue.slice(0, 4).map(q => `
+        <tr>
+          <td>
+            <div class="fw-semibold text-dark">${q.patientName}</div>
+            <div class="text-muted small">${q.patientId}</div>
+          </td>
+          <td><span class="badge bg-light text-dark border">#${q.id.replace('WQ-', '')}</span></td>
+          <td>${q.doctorName}</td>
+          <td>${q.checkInTime}</td>
+          <td><span class="badge bg-warning-subtle text-warning">${q.waitMinutes} mins</span></td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-success" onclick="HMSApp.showToast('Calling ${q.patientName} to Room 102', 'success')">
+              Call In
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Populate booking dropdowns
+      const pSelect = document.getElementById('qbPatientSelect');
+      pSelect.innerHTML = patients.map(p => `<option value="${p.id}" data-name="${p.name}">${p.name} (${p.id})</option>`).join('');
+
+      const dSelect = document.getElementById('qbDoctorSelect');
+      dSelect.innerHTML = doctors.map(d => `<option value="${d.id}" data-name="${d.name}" data-dept="${d.specialization}">${d.name} - ${d.specialization}</option>`).join('');
+    }
+
+    function renderCalendar(month, year) {
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('calendarMonthHeader').textContent = `< ${monthNames[month]} ${year} >`;
+
+      const daysGrid = document.getElementById('calendarDaysGrid');
+      daysGrid.innerHTML = '';
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const prevTotalDays = new Date(year, month, 0).getDate();
+
+      // Prev month leading days
+      for (let i = firstDayIndex; i > 0; i--) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-date-cell other-month';
+        cell.textContent = prevTotalDays - i + 1;
+        daysGrid.appendChild(cell);
+      }
+
+      // Current month days
+      for (let day = 1; day <= totalDays; day++) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-date-cell';
+        if (day === selectedDate) {
+          cell.classList.add('active-date');
+        }
+        cell.textContent = day;
+        cell.onclick = () => {
+          selectedDate = day;
+          renderCalendar(month, year);
+          HMSApp.showToast(`Selected date: ${day} ${monthNames[month]} ${year}`, 'info');
+        };
+        daysGrid.appendChild(cell);
+      }
+
+      // Trailing days
+      const currentCellCount = firstDayIndex + totalDays;
+      const nextDays = (7 - (currentCellCount % 7)) % 7;
+      for (let i = 1; i <= nextDays; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-date-cell other-month';
+        cell.textContent = i;
+        daysGrid.appendChild(cell);
+      }
+    }
+
+    function changeMonth(delta) {
+      currentCalMonth += delta;
+      if (currentCalMonth > 11) {
+        currentCalMonth = 0;
+        currentCalYear++;
+      } else if (currentCalMonth < 0) {
+        currentCalMonth = 11;
+        currentCalYear--;
+      }
+      renderCalendar(currentCalMonth, currentCalYear);
+    }
+
+    async function handleQuickBook(e) {
+      e.preventDefault();
+      const pSel = document.getElementById('qbPatientSelect');
+      const dSel = document.getElementById('qbDoctorSelect');
+      
+      const patientId = pSel.value;
+      const patientName = pSel.options[pSel.selectedIndex].getAttribute('data-name');
+      const doctorId = dSel.value;
+      const doctorName = dSel.options[dSel.selectedIndex].getAttribute('data-name');
+      const department = dSel.options[dSel.selectedIndex].getAttribute('data-dept');
+      const date = document.getElementById('qbDate').value;
+      const time = document.getElementById('qbTime').value;
+      const reason = document.getElementById('qbReason').value;
+
+      await HMSApi.appointments.book({
+        patientId,
+        patientName,
+        doctorId,
+        doctorName,
+        department,
+        date,
+        time,
+        reason
+      });
+
+      bootstrap.Modal.getInstance(document.getElementById('quickBookModal')).hide();
+      HMSApp.showToast(`Appointment scheduled for ${patientName} with ${doctorName}!`, 'success');
+      loadDashboardData();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMS - Hospital & Medical Centre</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hms-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --hms-font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+      --hms-primary: #0066f5;
+      --hms-primary-dark: #0052cc;
+      --hms-primary-light: #e9f2fe;
+      --hms-bg: #f3f6fa;
+      --hms-card-bg: #ffffff;
+      --hms-border: #e6edf5;
+      --hms-text: #1e293b;
+      --hms-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--hms-font-sans);
+      background-color: var(--hms-bg);
+      color: var(--hms-text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-title, .hero-title, .metric-number-text {
+      font-family: var(--hms-font-heading);
+      letter-spacing: -0.02em;
+    }
+
+    /* TOP EMERGENCY BAR */
+    .top-emergency-bar {
+      background-color: #0062eb;
+      color: #ffffff;
+      font-size: 0.82rem;
+      padding: 0.5rem 0;
+    }
+    .top-emergency-bar a.btn-login {
+      background: #ffffff;
+      color: #0062eb;
+      font-weight: 600;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .top-emergency-bar a.btn-login:hover {
+      background: #f0f6ff;
+      transform: translateY(-1px);
+    }
+
+    /* MAIN NAVBAR */
+    .hms-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--hms-border);
+      padding: 0.65rem 0;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+    .brand-logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0062eb;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: -0.5px;
+      position: relative;
+      box-shadow: 0 3px 8px rgba(0, 98, 235, 0.3);
+    }
+    .brand-logo-circle::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      width: 18px;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0062eb;
+      line-height: 1.1;
+    }
+    .brand-subtitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-left: 0.25rem;
+    }
+
+    /* NAVBAR PILLS */
+    .nav-pills-menu {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-pill-link {
+      color: #475569;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.45rem 0.85rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+    .nav-pill-link i {
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+    .nav-pill-link:hover {
+      color: #0062eb;
+      background: #f1f5f9;
+    }
+    .nav-pill-link:hover i {
+      color: #0062eb;
+    }
+    .nav-pill-link.active {
+      background: #e9f2fe;
+      color: #0062eb;
+      font-weight: 600;
+    }
+    .nav-pill-link.active i {
+      color: #0062eb;
+    }
+
+    /* NAVBAR SEARCH & PROFILE */
+    .nav-search-wrapper {
+      position: relative;
+      width: 210px;
+    }
+    .nav-search-input {
+      width: 100%;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 0.4rem 2rem 0.4rem 0.9rem;
+      font-size: 0.8rem;
+      color: #1e293b;
+      outline: none;
+    }
+    .nav-search-input:focus {
+      background: #ffffff;
+      border-color: #0062eb;
+    }
+    .nav-search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+    .nav-bell-btn {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-bell-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffffff;
+    }
+    .btn-nav-login {
+      background: #0062eb;
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 0.42rem 1.05rem;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 98, 235, 0.2);
+    }
+    .btn-nav-login:hover {
+      background: #0052cc;
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 98, 235, 0.35);
+    }
+
+    /* MAIN CONTAINER */
+    .hms-page-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    /* SECTION 1: HERO BANNER */
+    .hero-banner-card {
+      background: linear-gradient(135deg, #eaf2fc 0%, #e1edfc 50%, #eff6ff 100%);
+      border-radius: 18px;
+      border: 1px solid #dbeafe;
+      padding: 2.2rem 2.2rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 250px;
+      height: 100%;
+    }
+    .hero-greeting {
+      font-size: 0.95rem;
+      color: #475569;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+    .hero-desc {
+      font-size: 0.9rem;
+      color: #475569;
+      max-width: 420px;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .hero-building-art {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      width: 46%;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+    .hero-building-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.8) 35%, black 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.8) 35%, black 100%);
+    }
+
+    /* QUICK ACCESS WIDGET */
+    .quick-access-card {
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid var(--hms-border);
+      padding: 1.25rem 1.4rem;
+      height: 100%;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+    }
+    .quick-action-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+    .quick-action-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    /* ACTION ITEM TINTS */
+    .qa-blue {
+      background-color: #eff6ff;
+      color: #0062eb;
+    }
+    .qa-blue i { color: #0062eb; }
+    
+    .qa-purple {
+      background-color: #faf5ff;
+      color: #7e22ce;
+    }
+    .qa-purple i { color: #7e22ce; }
+
+    .qa-green {
+      background-color: #f0fdf4;
+      color: #15803d;
+    }
+    .qa-green i { color: #15803d; }
+
+    .qa-red {
+      background-color: #fef2f2;
+      color: #dc2626;
+    }
+    .qa-red i { color: #dc2626; }
+
+    .qa-yellow {
+      background-color: #fffbeb;
+      color: #b45309;
+    }
+    .qa-yellow i { color: #b45309; }
+
+    .qa-teal {
+      background-color: #f0fdfa;
+      color: #0f766e;
+    }
+    .qa-teal i { color: #0f766e; }
+
+    /* STAT METRIC CARDS */
+    .metric-card-clean {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--hms-border);
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+      transition: transform 0.15s ease;
+    }
+    .metric-card-clean:hover {
+      transform: translateY(-2px);
+    }
+    .metric-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .metric-title-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      margin-bottom: 0.2rem;
+    }
+    .metric-number-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .metric-trend-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* CONTENT BLOCKS */
+    .dashboard-block-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--hms-border);
+      padding: 1.25rem;
+      height: 100%;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+    }
+    .block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .block-header-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+    }
+    .block-view-all {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0062eb;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .block-view-all:hover {
+      text-decoration: underline;
+    }
+
+    /* UPCOMING APPOINTMENTS TABLE */
+    .appointments-table-custom {
+      width: 100%;
+      font-size: 0.82rem;
+      border-collapse: separate;
+      border-spacing: 0 0.4rem;
+    }
+    .appointments-table-custom th {
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .appointments-table-custom td {
+      padding: 0.55rem 0.5rem;
+      color: #334155;
+      background: #ffffff;
+      border-top: 1px solid #f1f5f9;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .appointments-table-custom tr td:first-child {
+      border-left: 1px solid #f1f5f9;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      font-weight: 600;
+    }
+    .appointments-table-custom tr td:last-child {
+      border-right: 1px solid #f1f5f9;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    /* BADGES */
+    .badge-pill-confirmed {
+      background-color: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+    .badge-pill-waiting {
+      background-color: #fffbeb;
+      color: #d97706;
+      border: 1px solid #fde68a;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+    .badge-pill-checkedin {
+      background-color: #eff6ff;
+      color: #0284c7;
+      border: 1px solid #bae6fd;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+
+    /* RECENT ACTIVITIES LIST */
+    .activity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f8fafc;
+    }
+    .activity-row:last-child {
+      border-bottom: none;
+    }
+    .activity-icon-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .activity-main-text {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .activity-sub-text {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+    .activity-time-text {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* PROMO BOX & QUICK LINKS */
+    .promo-commitment-card {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #bae6fd;
+    }
+    .promo-doc-img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ffffff;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+    }
+    .promo-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0369a1;
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
+    }
+    .promo-sub {
+      font-size: 0.7rem;
+      color: #075985;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+    .promo-btn {
+      background: #0062eb;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .promo-btn:hover {
+      color: #ffffff;
+      background: #0052cc;
+    }
+
+    /* QUICK LINK LIST */
+    .quick-link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.25rem;
+      text-decoration: none;
+      color: #334155;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border-bottom: 1px solid #f8fafc;
+      transition: all 0.15s ease;
+    }
+    .quick-link-row:last-child {
+      border-bottom: none;
+    }
+    .quick-link-row:hover {
+      color: #0062eb;
+      padding-left: 0.45rem;
+    }
+    .quick-link-row i:first-child {
+      color: #0062eb;
+      font-size: 0.95rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* FOOTER */
+    .clean-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--hms-border);
+      padding: 1.25rem 0;
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 2rem;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1199.98px) {
+      .nav-search-wrapper {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 991.98px) {
+      .hero-banner-card {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 1.4rem 1.15rem 1.15rem !important;
+        min-height: auto !important;
+        gap: 1rem;
+      }
+      .hero-building-art {
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        height: 190px !important;
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        margin-top: 0.25rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+      }
+      .hero-building-art img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center bottom !important;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+      }
+      .hero-desc {
+        max-width: 100%;
+      }
+      .hms-page-container {
+        padding: 1.25rem 1rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .top-emergency-bar {
+        font-size: 0.74rem;
+        padding: 0.35rem 0.5rem;
+      }
+      .hms-navbar {
+        height: 60px;
+        padding: 0 0.75rem;
+      }
+      .brand-title {
+        font-size: 1.15rem;
+      }
+      .btn-nav-login {
+        font-size: 0.78rem;
+        padding: 0.35rem 0.7rem;
+      }
+      .hero-banner-card {
+        padding: 1.4rem 1.1rem;
+      }
+      .hero-title {
+        font-size: clamp(1.35rem, 5vw, 1.85rem);
+      }
+      .hero-desc {
+        font-size: 0.82rem;
+        margin-bottom: 1.1rem;
+      }
+      .chart-container-clean {
+        height: 220px !important;
+      }
+      .metric-card-clean {
+        padding: 0.75rem 0.65rem;
+        gap: 0.5rem;
+      }
+      .metric-icon-box {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+      .metric-number-text {
+        font-size: clamp(1.1rem, 4vw, 1.45rem);
+      }
+      .metric-title-text {
+        font-size: 0.72rem;
+      }
+      .metric-trend-text {
+        font-size: 0.65rem;
+      }
+      .appointments-table-custom th,
+      .appointments-table-custom td {
+        padding: 0.6rem 0.65rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .hero-building-art {
+        height: 165px !important;
+      }
+      .quick-action-item {
+        padding: 0.65rem 0.45rem !important;
+        font-size: 0.75rem !important;
+        gap: 0.35rem !important;
+      }
+      .quick-action-item i.bi-chevron-right {
+        display: none !important;
+      }
+      .quick-action-item span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .hero-greeting {
+        font-size: 0.85rem;
+      }
+      .promo-commitment-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP EMERGENCY BAR -->
+  <div class="top-emergency-bar">
+    <div class="container-fluid px-3 px-lg-5">
+      <!-- MOBILE VIEW (< 768px): SINGLE SLEEK COMPACT ROW -->
+      <div class="d-flex d-md-none justify-content-between align-items-center py-1">
+        <a href="tel:+15559110000" class="text-white text-decoration-none fw-semibold d-flex align-items-center gap-1" style="font-size: 0.76rem;">
+          <i class="bi bi-telephone-fill text-warning"></i>
+          <span>24/7 Hotline: <strong>+1 (555) 911-0000</strong></span>
+        </a>
+        <span class="badge bg-danger rounded-pill px-2 py-1" style="font-size: 0.68rem;">
+          <i class="bi bi-clock-fill me-1"></i> Open 24/7
+        </span>
+      </div>
+
+      <!-- DESKTOP VIEW (>= 768px): FULL BAR -->
+      <div class="d-none d-md-flex justify-content-between align-items-center py-1 gap-2">
+        <div class="d-flex align-items-center gap-3">
+          <span><i class="bi bi-geo-alt-fill me-1"></i> 742 Healthcare Ave, Medical District, Springfield</span>
+          <span class="opacity-50">|</span>
+          <span><i class="bi bi-clock-fill me-1"></i> 24/7 Emergency Trauma Center Open</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span><i class="bi bi-telephone-fill me-1"></i> Emergency Hotline: <strong>+1 (555) 911-0000</strong></span>
+          <span class="opacity-50">|</span>
+          <a href="index.html" class="btn-login">
+            <i class="bi bi-person-fill"></i> Staff & Patient Login
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN NAVBAR -->
+  <header class="hms-navbar">
+    <div class="container-fluid px-3 px-lg-5 d-flex align-items-center justify-content-between">
+      
+      <!-- BRAND LOGO -->
+      <a class="d-flex align-items-center text-decoration-none" href="home.html">
+        <div class="brand-logo-circle flex-shrink-0">
+          HMS
+        </div>
+        <div class="d-flex align-items-baseline ms-2">
+          <span class="brand-title">Hospital</span>
+          <span class="brand-subtitle d-none d-sm-inline ms-1">&amp; Medical Centre</span>
+        </div>
+      </a>
+
+      <!-- NAVIGATION PILLS -->
+      <nav class="d-none d-xl-block">
+        <ul class="nav-pills-menu">
+          <li><a href="home.html" class="nav-pill-link active"><i class="bi bi-house-door-fill"></i> Home</a></li>
+          <li><a href="pages/departments.html" class="nav-pill-link"><i class="bi bi-grid-fill"></i> Departments</a></li>
+          <li><a href="pages/doctors.html" class="nav-pill-link"><i class="bi bi-people-fill"></i> Our Specialists</a></li>
+          <li><a href="pages/health-checkup.html" class="nav-pill-link"><i class="bi bi-heart-fill"></i> Health Packages</a></li>
+          <li><a href="#aboutHospitalModal" data-bs-toggle="modal" class="nav-pill-link"><i class="bi bi-info-circle-fill"></i> About Hospital</a></li>
+          <li><a href="#contactModal" data-bs-toggle="modal" class="nav-pill-link"><i class="bi bi-chat-left-text-fill"></i> Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- SEARCH & USER ACTIONS -->
+      <div class="d-flex align-items-center gap-2 gap-sm-3 flex-shrink-0">
+        <div class="nav-search-wrapper d-none d-md-block">
+          <input type="text" class="nav-search-input" placeholder="Search doctors, departments..." id="homeNavSearch">
+          <i class="bi bi-search nav-search-icon"></i>
+        </div>
+
+        <a href="javascript:void(0)" class="nav-bell-btn d-none d-sm-flex" title="Notifications">
+          <i class="bi bi-bell-fill"></i>
+          <span class="nav-bell-badge">3</span>
+        </a>
+
+        <!-- LOGIN BUTTON DIRECT NAVIGATION TO LOGIN PAGE -->
+        <a href="index.html" class="btn-nav-login" title="Staff & Patient Portal Login">
+          <i class="bi bi-person-fill"></i>
+          <span>Login</span>
+        </a>
+
+        <!-- MOBILE HAMBURGER BUTTON -->
+        <button class="btn btn-light border d-xl-none p-2 rounded-3 flex-shrink-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileHomeNav" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-5 text-dark"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MOBILE OFFCANVAS NAVIGATION DRAWER -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileHomeNav" aria-labelledby="mobileHomeNavLabel" style="max-width: 310px;">
+    <div class="offcanvas-header border-bottom bg-light">
+      <div class="d-flex align-items-center" id="mobileHomeNavLabel">
+        <div class="brand-logo-circle me-2" style="width: 34px; height: 34px; font-size: 0.85rem;">HMS</div>
+        <div class="d-flex align-items-baseline">
+          <span class="brand-title" style="font-size: 1.1rem;">Hospital</span>
+          <span class="brand-subtitle" style="font-size: 0.75rem;">&amp; Medical Centre</span>
+        </div>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3">
+      <div>
+        <!-- SEARCH -->
+        <div class="mb-3">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control bg-light border-start-0" placeholder="Search doctors, tests..." id="mobileSearchInput">
+          </div>
+        </div>
+
+        <!-- NAV LINKS -->
+        <div class="list-group list-group-flush border-0">
+          <a href="home.html" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 active fw-semibold">
+            <i class="bi bi-house-door-fill fs-5 text-primary"></i> Home
+          </a>
+          <a href="pages/departments.html" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 fw-medium">
+            <i class="bi bi-grid-fill fs-5 text-info"></i> Departments
+          </a>
+          <a href="pages/doctors.html" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 fw-medium">
+            <i class="bi bi-people-fill fs-5 text-success"></i> Our Specialists
+          </a>
+          <a href="pages/health-checkup.html" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 fw-medium">
+            <i class="bi bi-heart-fill fs-5 text-danger"></i> Health Packages
+          </a>
+          <a href="#aboutHospitalModal" data-bs-toggle="modal" data-bs-dismiss="offcanvas" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 fw-medium">
+            <i class="bi bi-info-circle-fill fs-5 text-warning"></i> About Hospital
+          </a>
+          <a href="#contactModal" data-bs-toggle="modal" data-bs-dismiss="offcanvas" class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3 border-0 rounded-3 fw-medium">
+            <i class="bi bi-chat-left-text-fill fs-5 text-secondary"></i> Contact &amp; Support
+          </a>
+        </div>
+      </div>
+
+      <!-- BOTTOM ACTIONS -->
+      <div class="pt-3 border-top mt-4">
+        <a href="pages/appointments.html" class="btn btn-primary w-100 py-2 fw-semibold rounded-3 mb-2">
+          <i class="bi bi-calendar-event me-2"></i> Book Appointment
+        </a>
+        <a href="index.html" class="btn btn-outline-primary w-100 py-2 fw-semibold rounded-3 mb-3">
+          <i class="bi bi-person-lock me-2"></i> Staff &amp; Patient Portal
+        </a>
+        <div class="p-2 bg-light rounded-3 text-center small text-muted">
+          <i class="bi bi-telephone-fill text-danger me-1"></i> Emergency: <strong>+1 (555) 911-0000</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN HOMEPAGE DASHBOARD BODY -->
+  <main class="hms-page-container">
+    
+    <!-- ROW 1: HERO BANNER + QUICK ACCESS -->
+    <div class="row g-4 mb-4">
+      
+      <!-- HERO BANNER (Good Morning, Welcome to HMS!) -->
+      <div class="col-12 col-lg-8">
+        <div class="hero-banner-card">
+          <div style="z-index: 3;">
+            <div class="hero-greeting">Good Morning,</div>
+            <h1 class="hero-title">Welcome to HMS!</h1>
+            <p class="hero-desc">
+              Your health, our priority. We are here to provide quality care and support at every step of your journey.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <a href="pages/appointments.html" class="btn btn-primary rounded-3 px-3 py-2 fw-semibold shadow-sm text-center">
+                <i class="bi bi-calendar-event me-2"></i> Book Appointment
+              </a>
+              <a href="pages/doctors.html" class="btn btn-outline-primary bg-white rounded-3 px-3 py-2 fw-semibold text-center">
+                <i class="bi bi-search me-1"></i> Find a Doctor
+              </a>
+            </div>
+          </div>
+
+          <!-- BUILDING ART -->
+          <div class="hero-building-art">
+            <img src="assets/images/hospital-building.jpg" alt="HMS Hospital Building" loading="eager">
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACCESS (6 COLORED SQUARE CARDS) -->
+      <div class="col-12 col-lg-4">
+        <div class="quick-access-card">
+          <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-lightning-charge-fill text-primary"></i> Quick Access
+          </h6>
+
+          <div class="row g-2">
+            <div class="col-6">
+              <a href="pages/appointments.html" class="quick-action-item qa-blue">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar-event fs-5"></i>
+                  <span>Book Appointment</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+
+            <div class="col-6">
+              <a href="pages/doctors.html" class="quick-action-item qa-purple">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-person-badge fs-5"></i>
+                  <span>View Doctors</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+
+            <div class="col-6">
+              <a href="pages/doctor-appointments.html" class="quick-action-item qa-green">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar-check fs-5"></i>
+                  <span>My Appointments</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+
+            <div class="col-6">
+              <a href="pages/health-checkup.html" class="quick-action-item qa-red">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-heart-pulse fs-5"></i>
+                  <span>Health Checkup</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+
+            <div class="col-6">
+              <a href="pages/documents.html" class="quick-action-item qa-yellow">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-file-earmark-text fs-5"></i>
+                  <span>My Reports</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+
+            <div class="col-6">
+              <a href="#contactModal" data-bs-toggle="modal" class="quick-action-item qa-teal">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-telephone fs-5"></i>
+                  <span>Contact Us</span>
+                </div>
+                <i class="bi bi-chevron-right small"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 2: 4 STAT METRIC CARDS -->
+    <div class="row g-3 mb-4">
+      
+      <!-- TOTAL PATIENTS -->
+      <div class="col-6 col-xl-3">
+        <div class="metric-card-clean">
+          <div class="metric-icon-box" style="background-color: #eff6ff; color: #0062eb;">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div>
+            <div class="metric-title-text">Total Patients</div>
+            <div class="metric-number-text">15,289</div>
+            <div class="metric-trend-text text-success">
+              <i class="bi bi-arrow-up-short"></i> 12% <span class="d-none d-sm-inline">from last mo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY'S APPOINTMENTS -->
+      <div class="col-6 col-xl-3">
+        <div class="metric-card-clean">
+          <div class="metric-icon-box" style="background-color: #eff6ff; color: #0062eb;">
+            <i class="bi bi-calendar2-day-fill"></i>
+          </div>
+          <div>
+            <div class="metric-title-text">Today's Appts</div>
+            <div class="metric-number-text">48</div>
+            <div class="metric-trend-text text-success">
+              <i class="bi bi-arrow-up-short"></i> 8% <span class="d-none d-sm-inline">yesterday</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTAL DOCTORS -->
+      <div class="col-6 col-xl-3">
+        <div class="metric-card-clean">
+          <div class="metric-icon-box" style="background-color: #f0fdf4; color: #16a34a;">
+            <i class="bi bi-person-badge-fill"></i>
+          </div>
+          <div>
+            <div class="metric-title-text">Total Doctors</div>
+            <div class="metric-number-text">32</div>
+            <div class="metric-trend-text text-success">
+              <i class="bi bi-arrow-up-short"></i> 3% <span class="d-none d-sm-inline">from last mo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDING BILLS -->
+      <div class="col-6 col-xl-3">
+        <div class="metric-card-clean">
+          <div class="metric-icon-box" style="background-color: #fef2f2; color: #ef4444;">
+            <i class="bi bi-receipt-cutoff"></i>
+          </div>
+          <div>
+            <div class="metric-title-text">Pending Bills</div>
+            <div class="metric-number-text">12</div>
+            <div class="metric-trend-text text-danger">
+              <i class="bi bi-arrow-down-short"></i> 5% <span class="d-none d-sm-inline">from last mo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 3: 4 DASHBOARD BLOCKS -->
+    <div class="row g-4">
+      
+      <!-- BLOCK 1: UPCOMING APPOINTMENTS TABLE -->
+      <div class="col-12 col-xl-4">
+        <div class="dashboard-block-card">
+          <div class="block-header">
+            <h6 class="block-header-title">
+              <i class="bi bi-calendar-event text-primary"></i> Upcoming Appointments
+            </h6>
+            <a href="pages/appointments.html" class="block-view-all">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="appointments-table-custom text-nowrap">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Patient Name</th>
+                  <th>Doctor</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>09:00 AM</td>
+                  <td>Sneha R</td>
+                  <td>Dr. Priya S</td>
+                  <td>General Physician</td>
+                  <td><span class="badge-pill-confirmed">Confirmed</span></td>
+                </tr>
+                <tr>
+                  <td>10:30 AM</td>
+                  <td>Rahul K</td>
+                  <td>Dr. Arjun M</td>
+                  <td>Orthopedics</td>
+                  <td><span class="badge-pill-waiting">Waiting</span></td>
+                </tr>
+                <tr>
+                  <td>12:00 PM</td>
+                  <td>Ananya P</td>
+                  <td>Dr. Meera T</td>
+                  <td>Dermatology</td>
+                  <td><span class="badge-pill-confirmed">Confirmed</span></td>
+                </tr>
+                <tr>
+                  <td>02:30 PM</td>
+                  <td>Vikram S</td>
+                  <td>Dr. Ramesh K</td>
+                  <td>Cardiology</td>
+                  <td><span class="badge-pill-checkedin">Checked In</span></td>
+                </tr>
+                <tr>
+                  <td>04:00 PM</td>
+                  <td>Pooja M</td>
+                  <td>Dr. Neha L</td>
+                  <td>Gynecology</td>
+                  <td><span class="badge-pill-waiting">Waiting</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2: PATIENT STATISTICS CHART -->
+      <div class="col-12 col-xl-3">
+        <div class="dashboard-block-card">
+          <div class="block-header">
+            <h6 class="block-header-title">
+              <i class="bi bi-graph-up text-primary"></i> Patient Statistics
+            </h6>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-light border py-0 px-2 small" type="button" style="font-size: 0.75rem;">
+                Last 7 Days <i class="bi bi-chevron-down ms-1"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- CHART CANVAS -->
+          <div style="height: 155px; position: relative;">
+            <canvas id="patientStatChart"></canvas>
+          </div>
+
+          <!-- BOTTOM STAT PILLS -->
+          <div class="row g-2 mt-2 pt-2 border-top">
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2 p-1">
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size: 0.7rem;">New Patients</div>
+                  <div class="fw-bold small">248 <span class="text-success" style="font-size: 0.68rem;">↑ 15%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2 p-1">
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                  <i class="bi bi-bar-chart-fill"></i>
+                </div>
+                <div>
+                  <div class="text-muted" style="font-size: 0.7rem;">Total Visits</div>
+                  <div class="fw-bold small">1,248 <span class="text-primary" style="font-size: 0.68rem;">↑ 10%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCK 3: RECENT ACTIVITIES -->
+      <div class="col-12 col-xl-3">
+        <div class="dashboard-block-card">
+          <div class="block-header">
+            <h6 class="block-header-title">
+              <i class="bi bi-clock-history text-primary"></i> Recent Activities
+            </h6>
+            <a href="pages/receptionist/dashboard.html" class="block-view-all">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="activities-list-body">
+            <!-- ITEM 1 -->
+            <div class="activity-row">
+              <div class="d-flex align-items-center gap-2">
+                <div class="activity-icon-circle bg-primary-subtle text-primary">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+                <div>
+                  <div class="activity-main-text">New patient registered</div>
+                  <div class="activity-sub-text">Pooja Sharma (PID: HMS1024)</div>
+                </div>
+              </div>
+              <div class="activity-time-text">10:24 AM</div>
+            </div>
+
+            <!-- ITEM 2 -->
+            <div class="activity-row">
+              <div class="d-flex align-items-center gap-2">
+                <div class="activity-icon-circle" style="background-color: #fdf2f8; color: #db2777;">
+                  <i class="bi bi-calendar-check-fill"></i>
+                </div>
+                <div>
+                  <div class="activity-main-text">Appointment booked</div>
+                  <div class="activity-sub-text">Rahul K - Dr. Arjun M</div>
+                </div>
+              </div>
+              <div class="activity-time-text">09:45 AM</div>
+            </div>
+
+            <!-- ITEM 3 -->
+            <div class="activity-row">
+              <div class="d-flex align-items-center gap-2">
+                <div class="activity-icon-circle bg-info-subtle text-info">
+                  <i class="bi bi-file-earmark-medical-fill"></i>
+                </div>
+                <div>
+                  <div class="activity-main-text">Prescription added</div>
+                  <div class="activity-sub-text">Sneha R (PID: HMS1019)</div>
+                </div>
+              </div>
+              <div class="activity-time-text">09:20 AM</div>
+            </div>
+
+            <!-- ITEM 4 -->
+            <div class="activity-row">
+              <div class="d-flex align-items-center gap-2">
+                <div class="activity-icon-circle bg-success-subtle text-success">
+                  <i class="bi bi-receipt"></i>
+                </div>
+                <div>
+                  <div class="activity-main-text">Bill generated</div>
+                  <div class="activity-sub-text">Vikram S (₹2,450)</div>
+                </div>
+              </div>
+              <div class="activity-time-text">08:50 AM</div>
+            </div>
+
+            <!-- ITEM 5 -->
+            <div class="activity-row">
+              <div class="d-flex align-items-center gap-2">
+                <div class="activity-icon-circle bg-primary-subtle text-primary">
+                  <i class="bi bi-check2-circle"></i>
+                </div>
+                <div>
+                  <div class="activity-main-text">Patient checked in</div>
+                  <div class="activity-sub-text">Ananya P (PID: HMS1021)</div>
+                </div>
+              </div>
+              <div class="activity-time-text">08:15 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 4: PROMO CARD + QUICK LINKS -->
+      <div class="col-12 col-xl-2">
+        <div class="d-flex flex-column gap-3 h-100">
+          
+          <!-- TOP PROMO: YOUR HEALTH OUR COMMITMENT -->
+          <div class="promo-commitment-card">
+            <img src="assets/images/doctors/dr-priya.jpg" alt="Doctor" class="promo-doc-img">
+            <div>
+              <div class="promo-title">Your Health Our Commitment</div>
+              <div class="promo-sub">Trusted care from experienced professionals.</div>
+              <a href="pages/doctors.html" class="promo-btn">
+                Learn More <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- BOTTOM: QUICK LINKS -->
+          <div class="dashboard-block-card flex-grow-1 p-3">
+            <h6 class="fw-bold text-dark mb-2 small">Quick Links</h6>
+            
+            <a href="pages/doctors.html" class="quick-link-row">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge"></i>
+                <span>Find a Doctor</span>
+              </div>
+              <i class="bi bi-chevron-right text-muted small"></i>
+            </a>
+
+            <a href="pages/health-checkup.html" class="quick-link-row">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-calendar2-heart"></i>
+                <span>Health Packages</span>
+              </div>
+              <i class="bi bi-chevron-right text-muted small"></i>
+            </a>
+
+            <a href="pages/departments.html" class="quick-link-row">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-hospital"></i>
+                <span>Hospital Departments</span>
+              </div>
+              <i class="bi bi-chevron-right text-muted small"></i>
+            </a>
+
+            <a href="#emergency" class="quick-link-row" onclick="alert('Emergency Hotline: +1 (555) 911-0000. 24/7 Trauma Team On Standby.')">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-shield-plus text-danger"></i>
+                <span>Emergency Services</span>
+              </div>
+              <i class="bi bi-chevron-right text-muted small"></i>
+            </a>
+
+            <a href="#contactModal" data-bs-toggle="modal" class="quick-link-row">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-headset"></i>
+                <span>Contact Us</span>
+              </div>
+              <i class="bi bi-chevron-right text-muted small"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="clean-footer">
+    <div class="container-fluid px-lg-5 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+      <div>
+        &copy; 2025 HMS - Hospital &amp; Medical Centre. All rights reserved.
+      </div>
+      <div>
+        Care | Compassion | Excellence
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: ABOUT HOSPITAL -->
+  <div class="modal fade" id="aboutHospitalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="bi bi-hospital text-primary me-2"></i> About HMS Hospital &amp; Medical Centre</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small">
+          <p>HMS Hospital & Medical Centre is a state-of-the-art multi-specialty clinical facility dedicated to delivering compassionate, evidence-based healthcare. Our facility houses 500+ beds, 12 advanced modular operation theaters, and 24/7 emergency response.</p>
+          <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i> JCI and NABH Certified Excellence</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Comprehensive Diagnostic & Imaging Center</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i> 24/7 Level 1 Trauma Care Center</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONTACT US -->
+  <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="bi bi-telephone-inbound text-primary me-2"></i> Contact Hospital Helpdesk</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small">
+          <div class="mb-3">
+            <strong>Address:</strong> 742 Healthcare Ave, Medical District, Springfield
+          </div>
+          <div class="mb-3">
+            <strong>Emergency Hotline:</strong> <span class="text-danger fw-bold">+1 (555) 911-0000</span> (24/7)
+          </div>
+          <div class="mb-3">
+            <strong>Appointments Desk:</strong> +1 (555) 019-2831 (Mon - Sat: 08:00 AM - 08:00 PM)
+          </div>
+          <div class="mb-0">
+            <strong>Official Email:</strong> info@hms-hospital.org
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Patient Statistics Line Chart
+      const ctx = document.getElementById('patientStatChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Apr 14', 'Apr 15', 'Apr 16', 'Apr 17', 'Apr 18', 'Apr 19', 'Apr 20'],
+          datasets: [{
+            data: [40, 65, 80, 110, 130, 135, 175],
+            borderColor: '#0062eb',
+            backgroundColor: 'rgba(0, 98, 235, 0.08)',
+            borderWidth: 2,
+            pointBackgroundColor: '#0062eb',
+            pointRadius: 3.5,
+            pointHoverRadius: 5,
+            fill: true,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { size: 11 },
+              bodyFont: { size: 11 },
+              padding: 6,
+              cornerRadius: 6
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9 }, color: '#94a3b8' }
+            },
+            y: {
+              beginAtZero: true,
+              max: 200,
+              ticks: { stepSize: 50, font: { size: 9 }, color: '#94a3b8' },
+              grid: { color: '#f1f5f9' }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

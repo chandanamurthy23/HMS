@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Departments - MedPulse HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <style>
+    .dept-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .dept-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.1);
+      border-color: #cbd5e1;
+    }
+    .dept-icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .dept-badge-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 20px;
+    }
+    .dept-stat-chip {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      text-align: center;
+      flex: 1;
+    }
+    .dept-filter-btn.active {
+      background-color: #0d6efd !important;
+      color: #ffffff !important;
+      border-color: #0d6efd !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- HEADER & ACTIONS -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+          <div>
+            <h2 class="fw-bold mb-1">Clinical Departments & Centers of Excellence</h2>
+            <p class="text-muted mb-0 small">Specialized outpatient wings, clinical services, in-charge faculty, and operational units.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
+              <i class="bi bi-plus-circle me-1"></i> Add Department
+            </button>
+            <a href="appointments.html" class="btn btn-outline-primary bg-white shadow-sm">
+              <i class="bi bi-calendar-check me-1"></i> Book Appointment
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 OVERVIEW METRIC CARDS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-blue">
+              <div class="stat-pastel-title">
+                <i class="bi bi-grid-fill text-primary"></i> Clinical Divisions
+              </div>
+              <div class="stat-pastel-count" id="statDeptCount">8 Active</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-purple">
+              <div class="stat-pastel-title">
+                <i class="bi bi-person-badge-fill" style="color: #9333ea;"></i> On-Duty Doctors
+              </div>
+              <div class="stat-pastel-count">12 Specialists</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-green">
+              <div class="stat-pastel-title">
+                <i class="bi bi-hospital-fill text-success"></i> Inpatient Beds
+              </div>
+              <div class="stat-pastel-count">145 Available</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-orange">
+              <div class="stat-pastel-title">
+                <i class="bi bi-lightning-charge-fill text-warning"></i> Emergency Units
+              </div>
+              <div class="stat-pastel-count">24/7 Level-1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH & FILTER BAR -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white p-3">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <!-- FILTER PILLS -->
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-sm btn-outline-secondary dept-filter-btn active rounded-pill px-3" onclick="filterDepartments('all', this)">All Wings (8)</button>
+              <button class="btn btn-sm btn-outline-secondary dept-filter-btn rounded-pill px-3" onclick="filterDepartments('medical', this)">Internal Medicine</button>
+              <button class="btn btn-sm btn-outline-secondary dept-filter-btn rounded-pill px-3" onclick="filterDepartments('surgical', this)">Surgical & Trauma</button>
+              <button class="btn btn-sm btn-outline-secondary dept-filter-btn rounded-pill px-3" onclick="filterDepartments('specialty', this)">Super Specialties</button>
+            </div>
+
+            <!-- SEARCH INPUT -->
+            <div class="position-relative" style="min-width: 260px;">
+              <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+              <input type="text" class="form-control form-control-sm ps-5 rounded-pill bg-light border-0" id="deptSearchInput" placeholder="Search department, floor, or head..." onkeyup="searchDepartments()">
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPARTMENTS GRID CONTAINER -->
+        <div class="row g-4" id="departmentsGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD DEPARTMENT -->
+  <div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="handleCreateDepartment(event)">
+          <div class="modal-header border-bottom px-4 pt-4 pb-3">
+            <h5 class="modal-title fw-bold text-dark"><i class="bi bi-building-add text-primary me-2"></i> Register New Department</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body px-4 py-3">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Department Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="newDeptName" placeholder="e.g. Oncology & Chemotherapy" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Category <span class="text-danger">*</span></label>
+                <select class="form-select" id="newDeptCategory" required>
+                  <option value="medical">Internal Medicine</option>
+                  <option value="surgical">Surgical & Trauma</option>
+                  <option value="specialty">Super Specialty</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Wing / Floor <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="newDeptFloor" placeholder="e.g. 3rd Floor, West Wing" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Head of Department (HOD) <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="newDeptHod" placeholder="e.g. Dr. Arthur Pendelton, MD" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Bed Capacity</label>
+                <input type="number" class="form-control" id="newDeptBeds" placeholder="e.g. 25" min="1" value="20">
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold">Contact Extension</label>
+                <input type="text" class="form-control" id="newDeptExt" placeholder="e.g. Ext. 402">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Clinical Description</label>
+              <textarea class="form-control" id="newDeptDesc" rows="2" placeholder="Brief clinical scope and key facilities..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top px-4 py-3">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i> Save Department</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../data/dummyData.js"></script>
+  <script src="../assets/js/dataStore.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/apiService.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/navigation.js"></script>
+
+  <script>
+    const INITIAL_DEPARTMENTS = [
+      {
+        id: 'DEPT-01',
+        name: 'Cardiology',
+        category: 'specialty',
+        icon: 'bi-heart-pulse-fill',
+        color: '#ef4444',
+        bgSubtle: '#fee2e2',
+        badgeClass: 'bg-danger-subtle text-danger border border-danger-subtle',
+        floor: '3rd Floor, Heart Center (Suite 301-310)',
+        hod: 'Dr. Sarah Jenkins, MD, FACC',
+        hodAvatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 4,
+        beds: 35,
+        hours: 'Mon - Sat: 08:00 AM - 06:00 PM',
+        emergency: '24/7 Cath Lab on Standby',
+        desc: 'Advanced cardiac care, interventional catheterization, comprehensive ECG/Echo imaging, and intensive coronary recovery.',
+        ext: 'Ext. 301'
+      },
+      {
+        id: 'DEPT-02',
+        name: 'Neurology & Neurosurgery',
+        category: 'specialty',
+        icon: 'bi-cpu-fill',
+        color: '#9333ea',
+        bgSubtle: '#f3e8ff',
+        badgeClass: 'bg-purple-subtle text-purple border',
+        floor: '4th Floor, Brain & Spine Pavilion',
+        hod: 'Dr. Marcus Vance, MD, PhD',
+        hodAvatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 3,
+        beds: 28,
+        hours: 'Mon - Fri: 09:00 AM - 05:00 PM',
+        emergency: 'Acute Stroke Unit 24/7',
+        desc: 'Comprehensive diagnosis of neurological disorders, epilepsy monitoring, EEG diagnostics, and microsurgical brain therapy.',
+        ext: 'Ext. 405'
+      },
+      {
+        id: 'DEPT-03',
+        name: 'General Medicine & OPD',
+        category: 'medical',
+        icon: 'bi-hospital-fill',
+        color: '#0d6efd',
+        bgSubtle: '#dbeafe',
+        badgeClass: 'bg-primary-subtle text-primary border border-primary-subtle',
+        floor: '1st Floor, OPD Complex (Suite 101-115)',
+        hod: 'Dr. Priya Sharma, MBBS, MD',
+        hodAvatar: 'https://images.unsplash.com/photo-1594824813576-96b5a1cf314d?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 5,
+        beds: 40,
+        hours: 'Mon - Sun: 08:00 AM - 08:00 PM',
+        emergency: 'Day Care Observation Unit',
+        desc: 'Primary adult care, chronic illness management, seasonal fever control, metabolic syndrome treatments, and general health evaluations.',
+        ext: 'Ext. 102'
+      },
+      {
+        id: 'DEPT-04',
+        name: 'Pediatrics & Neonatology',
+        category: 'medical',
+        icon: 'bi-balloon-fill',
+        color: '#10b981',
+        bgSubtle: '#d1fae5',
+        badgeClass: 'bg-success-subtle text-success border border-success-subtle',
+        floor: '2nd Floor, Child Wellness Wing',
+        hod: 'Dr. Elena Rostova, MD, FAAP',
+        hodAvatar: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 3,
+        beds: 22,
+        hours: 'Mon - Sat: 08:30 AM - 04:30 PM',
+        emergency: 'Level III NICU 24/7',
+        desc: 'Dedicated newborn care, immunization clinics, developmental milestones monitoring, pediatric allergy treatments, and emergency care.',
+        ext: 'Ext. 204'
+      },
+      {
+        id: 'DEPT-05',
+        name: 'Orthopedics & Joint Care',
+        category: 'surgical',
+        icon: 'bi-person-walking',
+        color: '#f59e0b',
+        bgSubtle: '#fef3c7',
+        badgeClass: 'bg-warning-subtle text-warning border border-warning-subtle',
+        floor: 'Ground Floor, Wing B (Suite 108)',
+        hod: 'Dr. Rajesh Nair, MS (Ortho)',
+        hodAvatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 3,
+        beds: 30,
+        hours: 'Mon - Fri: 09:00 AM - 04:00 PM',
+        emergency: 'Trauma & Fracture Reductions',
+        desc: 'Advanced robotic joint replacement, sports injury rehab, arthroscopic surgeries, spine management, and fracture fixation.',
+        ext: 'Ext. 108'
+      },
+      {
+        id: 'DEPT-06',
+        name: 'Dermatology & Cosmetology',
+        category: 'specialty',
+        icon: 'bi-stars',
+        color: '#ec4899',
+        bgSubtle: '#fce7f3',
+        badgeClass: 'bg-pink-subtle text-pink border',
+        floor: '2nd Floor, Suite 215',
+        hod: 'Dr. Liam Anderson, MD',
+        hodAvatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 2,
+        beds: 10,
+        hours: 'Tue - Sat: 10:00 AM - 05:00 PM',
+        emergency: 'Severe Drug Allergy Protocols',
+        desc: 'Medical dermatology, skin pathology biopsy, laser therapeutics, chronic eczema/psoriasis management, and skin allergy panels.',
+        ext: 'Ext. 215'
+      },
+      {
+        id: 'DEPT-07',
+        name: 'Emergency & Trauma Center',
+        category: 'surgical',
+        icon: 'bi-shield-shaded',
+        color: '#dc2626',
+        bgSubtle: '#fee2e2',
+        badgeClass: 'bg-danger text-white',
+        floor: 'Ground Floor Dedicated Entrance (ER)',
+        hod: 'Dr. Arthur Pendelton, MD (Chief)',
+        hodAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 6,
+        beds: 25,
+        hours: 'Open 24 Hours / 7 Days a Week',
+        emergency: 'Immediate Triage & Critical Care',
+        desc: 'Level-1 trauma center equipped with state-of-the-art resuscitation suites, ambulance docking, and direct access to emergency operating theaters.',
+        ext: 'Ext. 911 / 100'
+      },
+      {
+        id: 'DEPT-08',
+        name: 'Diagnostic Radiology & Imaging',
+        category: 'specialty',
+        icon: 'bi-activity',
+        color: '#06b6d4',
+        bgSubtle: '#cffafe',
+        badgeClass: 'bg-info-subtle text-info border border-info-subtle',
+        floor: 'Basement Level 1, Diagnostics Wing',
+        hod: 'Dr. Kavita Verma, MD (Radiology)',
+        hodAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 3,
+        beds: 15,
+        hours: '24/7 Digital X-Ray & Emergency CT',
+        emergency: 'Rapid Stroke & Polytrauma CT',
+        desc: 'High-resolution 3T MRI, 128-Slice Dual Source CT, 4D Doppler Sonography, digital mammography, and interventional ultrasound-guided biopsies.',
+        ext: 'Ext. 110'
+      }
+    ];
+
+    const DEPT_STORAGE_KEY = 'MEDPULSE_HMS_DEPARTMENTS';
+    let currentFilter = 'all';
+
+    function getDepartments() {
+      try {
+        const stored = localStorage.getItem(DEPT_STORAGE_KEY);
+        if (stored) return JSON.parse(stored);
+      } catch (e) {
+        console.warn('Error loading departments from storage:', e);
+      }
+      localStorage.setItem(DEPT_STORAGE_KEY, JSON.stringify(INITIAL_DEPARTMENTS));
+      return INITIAL_DEPARTMENTS;
+    }
+
+    function saveDepartments(depts) {
+      localStorage.setItem(DEPT_STORAGE_KEY, JSON.stringify(depts));
+    }
+
+    function renderDepartments() {
+      const depts = getDepartments();
+      const grid = document.getElementById('departmentsGrid');
+      const searchQuery = (document.getElementById('deptSearchInput').value || '').toLowerCase().trim();
+
+      const filtered = depts.filter(d => {
+        const matchesCategory = currentFilter === 'all' || d.category === currentFilter;
+        const matchesSearch = !searchQuery || 
+                              d.name.toLowerCase().includes(searchQuery) || 
+                              d.floor.toLowerCase().includes(searchQuery) || 
+                              d.hod.toLowerCase().includes(searchQuery) ||
+                              d.desc.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('statDeptCount').textContent = `${depts.length} Active`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="p-4 bg-white rounded-4 border shadow-sm d-inline-block" style="max-width: 420px;">
+              <i class="bi bi-search text-muted display-4 mb-3 d-block"></i>
+              <h5 class="fw-bold">No Departments Found</h5>
+              <p class="text-muted small mb-0">No clinical departments match your current search or category filter. Try clearing your search.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(dept => `
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="dept-card p-4">
+            
+            <!-- CARD HEADER: ICON + NAME + BADGE -->
+            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="dept-icon-box" style="background-color: ${dept.bgSubtle}; color: ${dept.color};">
+                  <i class="bi ${dept.icon}"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-0">${dept.name}</h5>
+                  <div class="text-muted small d-flex align-items-center gap-1 mt-1">
+                    <i class="bi bi-geo-alt-fill text-danger" style="font-size: 0.8rem;"></i>
+                    <span style="font-size: 0.8rem;">${dept.floor}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.5; font-size: 0.84rem;">
+              ${dept.desc}
+            </p>
+
+            <!-- HOD FACULTY BAR -->
+            <div class="p-2 px-3 rounded-3 bg-light border d-flex align-items-center gap-2 mb-3">
+              <img src="${dept.hodAvatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=256'}" 
+                   class="rounded-circle border" width="32" height="32" style="object-fit: cover;" 
+                   onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=256'">
+              <div class="overflow-hidden min-w-0 flex-grow-1">
+                <div class="text-muted" style="font-size: 0.68rem; line-height: 1;">Head of Department</div>
+                <div class="fw-bold text-dark text-truncate" style="font-size: 0.82rem;">${dept.hod}</div>
+              </div>
+              <span class="badge bg-white text-secondary border px-2 py-1" style="font-size: 0.7rem;">${dept.ext}</span>
+            </div>
+
+            <!-- CHIPS ROW -->
+            <div class="d-flex gap-2 mb-3">
+              <div class="dept-stat-chip">
+                <div class="text-muted small" style="font-size: 0.7rem;">Specialists</div>
+                <div class="fw-bold text-dark" style="font-size: 0.95rem;">${dept.doctorsCount} Doctors</div>
+              </div>
+              <div class="dept-stat-chip">
+                <div class="text-muted small" style="font-size: 0.7rem;">Beds</div>
+                <div class="fw-bold text-dark" style="font-size: 0.95rem;">${dept.beds} Capacity</div>
+              </div>
+            </div>
+
+            <!-- FOOTER ACTION BUTTONS -->
+            <div class="d-flex gap-2 pt-2 border-top">
+              <a href="appointments.html?dept=${encodeURIComponent(dept.name)}" class="btn btn-sm btn-primary flex-grow-1 py-2 fw-semibold">
+                <i class="bi bi-calendar-plus me-1"></i> Book OPD
+              </a>
+              <a href="doctors.html?dept=${encodeURIComponent(dept.name)}" class="btn btn-sm btn-outline-secondary py-2 fw-semibold" title="View Doctors">
+                <i class="bi bi-people-fill"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterDepartments(category, btn) {
+      currentFilter = category;
+      document.querySelectorAll('.dept-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDepartments();
+    }
+
+    function searchDepartments() {
+      renderDepartments();
+    }
+
+    function handleCreateDepartment(e) {
+      e.preventDefault();
+      const name = document.getElementById('newDeptName').value.trim();
+      const category = document.getElementById('newDeptCategory').value;
+      const floor = document.getElementById('newDeptFloor').value.trim();
+      const hod = document.getElementById('newDeptHod').value.trim();
+      const beds = Number(document.getElementById('newDeptBeds').value) || 15;
+      const ext = document.getElementById('newDeptExt').value.trim() || 'Ext. 100';
+      const desc = document.getElementById('newDeptDesc').value.trim() || 'Comprehensive patient diagnosis and clinical services.';
+
+      const depts = getDepartments();
+      const newDept = {
+        id: `DEPT-${(depts.length + 1).toString().padStart(2, '0')}`,
+        name,
+        category,
+        icon: category === 'surgical' ? 'bi-scissors' : (category === 'specialty' ? 'bi-award-fill' : 'bi-hospital-fill'),
+        color: category === 'surgical' ? '#f59e0b' : (category === 'specialty' ? '#9333ea' : '#0d6efd'),
+        bgSubtle: category === 'surgical' ? '#fef3c7' : (category === 'specialty' ? '#f3e8ff' : '#dbeafe'),
+        badgeClass: 'bg-primary-subtle text-primary border',
+        floor,
+        hod,
+        hodAvatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=256',
+        doctorsCount: 2,
+        beds,
+        hours: 'Mon - Fri: 09:00 AM - 05:00 PM',
+        emergency: 'Standard ER Referral',
+        desc,
+        ext
+      };
+
+      depts.push(newDept);
+      saveDepartments(depts);
+
+      bootstrap.Modal.getInstance(document.getElementById('addDepartmentModal')).hide();
+      e.target.reset();
+      HMSApp.showToast(`Department "${name}" registered successfully!`, 'success');
+      renderDepartments();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      HMSNav.init('departments', 'Clinical Departments', ['Home', 'Departments']);
+      renderDepartments();
+    });
+  </script>
+</body>
+</html>

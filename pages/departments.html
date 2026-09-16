@@ -71,27 +71,30 @@
         <!-- HEADER & ACTIONS -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
           <div>
-            <h2 class="fw-bold mb-1">Clinical Departments & Centers of Excellence</h2>
+            <h2 class="fw-bold mb-1" style="font-size: clamp(1.35rem, 4vw, 1.85rem);">Clinical Departments &amp; Centers of Excellence</h2>
             <p class="text-muted mb-0 small">Specialized outpatient wings, clinical services, in-charge faculty, and operational units.</p>
           </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
+          <div class="d-flex gap-2 flex-wrap w-100 w-md-auto">
+            <button class="btn btn-primary shadow-sm flex-fill flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
               <i class="bi bi-plus-circle me-1"></i> Add Department
             </button>
-            <a href="appointments.html" class="btn btn-outline-primary bg-white shadow-sm">
+            <a href="appointments.html" class="btn btn-outline-primary bg-white shadow-sm flex-fill flex-md-grow-0">
               <i class="bi bi-calendar-check me-1"></i> Book Appointment
             </a>
           </div>
         </div>
 
         <!-- 4 OVERVIEW METRIC CARDS -->
-        <div class="row g-3 mb-4">
+        <div class="row g-2 g-sm-3 mb-4">
           <div class="col-6 col-xl-3">
             <div class="stat-card-pastel stat-pastel-blue">
               <div class="stat-pastel-title">
                 <i class="bi bi-grid-fill text-primary"></i> Clinical Divisions
               </div>
-              <div class="stat-pastel-count" id="statDeptCount">8 Active</div>
+              <div class="stat-pastel-count">
+                <span id="statDeptCount">8</span>
+                <span class="stat-pastel-sub">Active</span>
+              </div>
             </div>
           </div>
 
@@ -100,7 +103,10 @@
               <div class="stat-pastel-title">
                 <i class="bi bi-person-badge-fill" style="color: #9333ea;"></i> On-Duty Doctors
               </div>
-              <div class="stat-pastel-count">12 Specialists</div>
+              <div class="stat-pastel-count">
+                <span>12</span>
+                <span class="stat-pastel-sub">Specialists</span>
+              </div>
             </div>
           </div>
 
@@ -109,7 +115,10 @@
               <div class="stat-pastel-title">
                 <i class="bi bi-hospital-fill text-success"></i> Inpatient Beds
               </div>
-              <div class="stat-pastel-count">145 Available</div>
+              <div class="stat-pastel-count">
+                <span>145</span>
+                <span class="stat-pastel-sub">Available</span>
+              </div>
             </div>
           </div>
 
@@ -118,7 +127,10 @@
               <div class="stat-pastel-title">
                 <i class="bi bi-lightning-charge-fill text-warning"></i> Emergency Units
               </div>
-              <div class="stat-pastel-count">24/7 Level-1</div>
+              <div class="stat-pastel-count">
+                <span>24/7</span>
+                <span class="stat-pastel-sub">Level-1</span>
+              </div>
             </div>
           </div>
         </div>
@@ -397,7 +409,8 @@
         return matchesCategory && matchesSearch;
       });
 
-      document.getElementById('statDeptCount').textContent = `${depts.length} Active`;
+      const deptCountEl = document.getElementById('statDeptCount');
+      if (deptCountEl) deptCountEl.textContent = depts.length;
 
       if (filtered.length === 0) {
         grid.innerHTML = `

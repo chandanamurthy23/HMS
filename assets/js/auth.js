@@ -109,7 +109,8 @@ const HMSAuth = (function () {
     if (isSubRole) prefix = '../';
     else if (isInsidePages) prefix = '';
 
-    return `${prefix}${r}/dashboard.html`;
+    const ext = window.location.pathname.includes('.html') ? '.html' : '';
+    return `${prefix}${r}/dashboard${ext}`;
   }
 
   return {

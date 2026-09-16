@@ -23,7 +23,7 @@
       <main class="hms-content-body">
         
         <!-- 4 PASTEL STAT CARDS (Reference Image Screen 2) -->
-        <div class="row g-3 mb-4">
+        <div class="row g-2 g-sm-3 mb-4">
           <div class="col-6 col-xl-3">
             <div class="stat-card-pastel stat-pastel-blue">
               <div class="stat-pastel-title">
@@ -36,7 +36,7 @@
           <div class="col-6 col-xl-3">
             <div class="stat-card-pastel stat-pastel-green">
               <div class="stat-pastel-title">
-                <i class="bi bi-calendar2-check-fill text-success"></i> Today's Appointments
+                <i class="bi bi-calendar2-check-fill text-success"></i> <span class="d-none d-sm-inline">Today's Appointments</span><span class="d-inline d-sm-none">Today's Appts</span>
               </div>
               <div class="stat-pastel-count" id="statTodayAppointments">48</div>
             </div>
@@ -62,21 +62,23 @@
         </div>
 
         <!-- MAIN LAYOUT: APPOINTMENTS TABLE (8 COLS) + CALENDAR & ACTIVITIES (4 COLS) -->
-        <div class="row g-4">
+        <div class="row g-3 g-lg-4">
           
           <!-- LEFT 8 COLS: TODAY'S APPOINTMENTS -->
           <div class="col-12 col-lg-8">
             <div class="hms-card">
-              <div class="hms-card-header">
-                <div class="d-flex align-items-center gap-2">
-                  <h5 class="hms-card-title mb-0">Today's Appointments</h5>
-                  <span class="badge bg-primary-subtle text-primary rounded-pill">Real-time</span>
+              <div class="hms-card-header flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <h5 class="hms-card-title mb-0" style="font-size: clamp(0.95rem, 3.8vw, 1.1rem);">
+                    <i class="bi bi-calendar2-check text-primary"></i> Today's Appointments
+                  </h5>
+                  <span class="badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">Real-time</span>
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#quickBookModal">
+                <div class="d-flex align-items-center gap-2 w-100 w-sm-auto justify-content-between justify-content-sm-end">
+                  <button class="btn btn-sm btn-primary flex-fill flex-sm-grow-0 text-nowrap" data-bs-toggle="modal" data-bs-target="#quickBookModal">
                     <i class="bi bi-plus-lg me-1"></i> New Appointment
                   </button>
-                  <a href="../appointments.html" class="btn btn-sm btn-light border">View All</a>
+                  <a href="../appointments.html" class="btn btn-sm btn-light border flex-fill flex-sm-grow-0 text-nowrap text-center">View All</a>
                 </div>
               </div>
 
@@ -100,11 +102,11 @@
 
             <!-- WAITING ROOM QUICK QUEUE -->
             <div class="hms-card">
-              <div class="hms-card-header">
-                <h5 class="hms-card-title">
-                  <i class="bi bi-clock-history text-warning me-1"></i> Front Desk Check-in & Waiting Lobby
+              <div class="hms-card-header flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
+                <h5 class="hms-card-title mb-0" style="font-size: clamp(0.95rem, 3.8vw, 1.1rem);">
+                  <i class="bi bi-clock-history text-warning me-1"></i> Front Desk Check-in &amp; Waiting Lobby
                 </h5>
-                <a href="../waiting-time.html" class="btn btn-sm btn-outline-primary">Full Waiting Room</a>
+                <a href="../waiting-time.html" class="btn btn-sm btn-outline-primary w-100 w-sm-auto text-nowrap text-center">Full Waiting Room</a>
               </div>
               <div class="table-responsive">
                 <table class="hms-table text-nowrap">

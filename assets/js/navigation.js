@@ -252,8 +252,9 @@ const HMSNav = (function () {
     const ctx = getPathContext();
     // If on a role dashboard, go to the new role's dashboard; else reload current page with updated permissions
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('dashboard.html')) {
-      window.location.href = `${ctx.pagesPrefix}${role.toLowerCase()}/dashboard.html`;
+    if (path.includes('dashboard')) {
+      const ext = path.includes('.html') ? '.html' : '';
+      window.location.href = `${ctx.pagesPrefix}${role.toLowerCase()}/dashboard${ext}`;
     } else {
       window.location.reload();
     }

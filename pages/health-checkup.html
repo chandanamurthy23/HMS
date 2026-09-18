@@ -235,7 +235,7 @@
     let checkupList = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('health-checkup', 'Health Checkup & Vitals', ['Home', 'Clinical', 'Health Checkup']);
+      HMSNav.init('health-checkup', 'Health Checkup & Vitals', ['Home', 'Clinical', 'Health Checkup'], 'health_checkup.manage');
       await loadCheckups();
       await populateCheckupDropdown();
     });

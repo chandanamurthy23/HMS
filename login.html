@@ -181,6 +181,40 @@
       color: #0a58ca;
       text-decoration: underline;
     }
+    /* AUTH TABS (SIGN IN vs CREATE ACCOUNT) */
+    .auth-tabs {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.55rem 0.75rem;
+      border-radius: 7px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-tab-btn.active {
+      background: #ffffff;
+      color: #0d6efd;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    .auth-tab-btn:hover:not(.active) {
+      color: #1e293b;
+    }
+
     /* DEMO HELPER PILLS */
     .demo-role-badges {
       margin-top: 1.5rem;
@@ -276,84 +310,204 @@
       <div class="login-brand-tagline">Better Care. Healthier Tomorrow.</div>
     </div>
 
-    <!-- RIGHT SIDE: LOGIN FORM -->
+    <!-- RIGHT SIDE: LOGIN & REGISTRATION FORM -->
     <div class="login-right-form">
-      <h2 class="login-heading">Welcome Back!</h2>
-      <p class="login-subtext">Login to your account</p>
+      
+      <!-- AUTH MODE TABS -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+        </button>
+        <button type="button" class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
+          <i class="bi bi-person-plus me-1"></i> Create Account
+        </button>
+      </div>
 
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <!-- FIELD 1: USERNAME / EMAIL -->
-        <div class="form-group-custom">
-          <label class="custom-label" for="usernameInput">Username / Email</label>
-          <input 
-            type="text" 
-            class="custom-input" 
-            id="usernameInput" 
-            placeholder="Enter your username" 
-            value="admin@medpulse.com" 
-            required
-          >
-        </div>
+      <!-- 1. SIGN IN FORM -->
+      <div id="loginFormContainer">
+        <h2 class="login-heading">Welcome Back!</h2>
+        <p class="login-subtext">Login to your account or test role dashboards</p>
 
-        <!-- FIELD 2: PASSWORD -->
-        <div class="form-group-custom">
-          <label class="custom-label" for="passwordInput">Password</label>
-          <div class="position-relative">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <!-- FIELD 1: USERNAME / EMAIL -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="usernameInput">Username / Email</label>
             <input 
-              type="password" 
+              type="text" 
               class="custom-input" 
-              id="passwordInput" 
-              placeholder="Enter your password" 
-              value="password123" 
-              style="padding-right: 2.5rem;"
+              id="usernameInput" 
+              placeholder="e.g. admin@hms.com or your registered email" 
+              value="admin@hms.com" 
               required
             >
-            <i 
-              class="bi bi-eye text-muted position-absolute top-50 end-0 translate-middle-y me-3" 
-              id="togglePasswordIcon" 
-              style="cursor: pointer; font-size: 0.95rem;" 
-              onclick="togglePasswordVisibility()" 
-              title="Show/Hide Password"
-            ></i>
           </div>
-        </div>
 
-        <!-- FIELD 3: SELECT ROLE -->
-        <div class="form-group-custom">
-          <label class="custom-label" for="roleSelect">Select Role</label>
-          <select class="custom-select" id="roleSelect" onchange="handleRoleChange()" required>
-            <option value="Admin" selected>Admin</option>
-            <option value="Doctor">Doctor</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Patient">Patient</option>
-          </select>
-        </div>
+          <!-- FIELD 2: PASSWORD -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="passwordInput">Password</label>
+            <div class="position-relative">
+              <input 
+                type="password" 
+                class="custom-input" 
+                id="passwordInput" 
+                placeholder="Enter your password" 
+                value="admin123" 
+                style="padding-right: 2.5rem;"
+                required
+              >
+              <i 
+                class="bi bi-eye text-muted position-absolute top-50 end-0 translate-middle-y me-3" 
+                id="togglePasswordIcon" 
+                style="cursor: pointer; font-size: 0.95rem;" 
+                onclick="togglePasswordVisibility('passwordInput', 'togglePasswordIcon')" 
+                title="Show/Hide Password"
+              ></i>
+            </div>
+          </div>
 
-        <!-- LOGIN BUTTON -->
-        <button type="submit" class="btn-login-blue">
-          Login
-        </button>
+          <!-- FIELD 3: SELECT ROLE -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="roleSelect">Select Role</label>
+            <select class="custom-select" id="roleSelect" onchange="handleRoleChange()" required>
+              <option value="Super Admin" selected>Super Admin (Complete System Access)</option>
+              <option value="Admin">Admin (Hospital Operations)</option>
+              <option value="Receptionist">Receptionist (Frontdesk, Appointments & Billing)</option>
+              <option value="Doctor">Doctor (Consultations & Prescriptions)</option>
+              <option value="Lab">Lab (Specimens, Tests & Lab Billing)</option>
+              <option value="Investigation">Investigation (Radiology & Diagnostic Scans)</option>
+              <option value="Pharmacy">Pharmacy (Medicines, Stock & POS Billing)</option>
+              <option value="Store">Store (Inventory, Assets & Purchase)</option>
+              <option value="Patient">Patient (Personal Health Portal)</option>
+            </select>
+          </div>
 
-        <!-- FORGOT PASSWORD LINKS (MATCHING REFERENCE) -->
-        <div class="login-footer-links">
-          <a href="javascript:void(0)" class="forgot-link" onclick="alert('Demo notice: Any password or 1-click role button will log you in!')">
-            Forgot Password?
-          </a>
-          <a href="index.html" class="forgot-link">
-            Public Website
-          </a>
-        </div>
+          <!-- LOGIN ERROR ALERT CONTAINER -->
+          <div id="loginAlertBox" style="display: none;" class="alert alert-danger py-2 px-3 small rounded-3 mb-3"></div>
 
-        <!-- 1-CLICK DEMO LOGIN BUTTONS -->
-        <div class="demo-role-badges">
-          <div class="text-muted small mb-1" style="font-size: 0.72rem;">Quick Role Switch (Demo):</div>
-          <button type="button" class="demo-role-btn" onclick="quickLogin('Admin')">Admin</button>
-          <button type="button" class="demo-role-btn" onclick="quickLogin('Doctor')">Doctor</button>
-          <button type="button" class="demo-role-btn" onclick="quickLogin('Receptionist')">Receptionist</button>
-          <button type="button" class="demo-role-btn" onclick="quickLogin('Patient')">Patient</button>
-        </div>
+          <!-- LOGIN BUTTON -->
+          <button type="submit" class="btn-login-blue" id="loginSubmitBtn">
+            Sign In
+          </button>
 
-      </form>
+          <!-- FORGOT PASSWORD & REGISTER PROMPT -->
+          <div class="login-footer-links">
+            <a href="javascript:void(0)" class="forgot-link" onclick="alert('Demo Passwords:\nSuper Admin & Staff: admin123\nPatient: password123\nOr use Create Account tab!')">
+              Demo Credentials
+            </a>
+            <a href="javascript:void(0)" class="forgot-link fw-semibold" onclick="switchAuthTab('register')">
+              New here? Register &rarr;
+            </a>
+          </div>
+
+          <!-- 1-CLICK DEMO LOGIN BUTTONS -->
+          <div class="demo-role-badges">
+            <div class="text-muted small mb-1" style="font-size: 0.72rem;">Quick Role Switch (Click to autofill):</div>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Super Admin')">Super Admin</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Admin')">Admin</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Receptionist')">Receptionist</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Doctor')">Doctor</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Lab')">Lab</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Investigation')">Investigation</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Pharmacy')">Pharmacy</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Store')">Store</button>
+            <button type="button" class="demo-role-btn" onclick="quickLogin('Patient')">Patient</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- 2. REGISTRATION FORM (CREATE ACCOUNT WITH USER CREDENTIALS) -->
+      <div id="registerFormContainer" style="display: none;">
+        <h2 class="login-heading">Create Account</h2>
+        <p class="login-subtext">Register your credentials to test all features</p>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <!-- FIELD 1: FULL NAME -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="regNameInput">Full Name <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="custom-input" 
+              id="regNameInput" 
+              placeholder="e.g. John Doe" 
+              required
+            >
+          </div>
+
+          <!-- FIELD 2: EMAIL -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="regEmailInput">Email Address <span class="text-danger">*</span></label>
+            <input 
+              type="email" 
+              class="custom-input" 
+              id="regEmailInput" 
+              placeholder="e.g. yourname@example.com" 
+              required
+            >
+          </div>
+
+          <!-- FIELD 3: PHONE -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="regPhoneInput">Phone Number</label>
+            <input 
+              type="tel" 
+              class="custom-input" 
+              id="regPhoneInput" 
+              placeholder="+91 98765 43210"
+            >
+          </div>
+
+          <!-- FIELD 4: DESIRED ROLE -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="regRoleSelect">Account Type / Role</label>
+            <select class="custom-select" id="regRoleSelect" required>
+              <option value="Patient" selected>Patient (Health Portal & Booking)</option>
+              <option value="Receptionist">Receptionist (Frontdesk, Appointments & Billing)</option>
+              <option value="Doctor">Doctor (Consultations & Prescriptions)</option>
+              <option value="Lab">Lab (Specimens, Diagnostic Tests & Reports)</option>
+              <option value="Investigation">Investigation (Radiology & Imaging)</option>
+              <option value="Pharmacy">Pharmacy (Medicines & Dispensing)</option>
+              <option value="Store">Store (Inventory, Assets & Requisitions)</option>
+              <option value="Admin">Admin (Hospital Operations)</option>
+            </select>
+          </div>
+
+          <!-- FIELD 5: PASSWORD -->
+          <div class="form-group-custom">
+            <label class="custom-label" for="regPasswordInput">Password <span class="text-danger">*</span></label>
+            <div class="position-relative">
+              <input 
+                type="password" 
+                class="custom-input" 
+                id="regPasswordInput" 
+                placeholder="Create your password" 
+                style="padding-right: 2.5rem;"
+                required
+              >
+              <i 
+                class="bi bi-eye text-muted position-absolute top-50 end-0 translate-middle-y me-3" 
+                id="toggleRegPasswordIcon" 
+                style="cursor: pointer; font-size: 0.95rem;" 
+                onclick="togglePasswordVisibility('regPasswordInput', 'toggleRegPasswordIcon')" 
+                title="Show/Hide Password"
+              ></i>
+            </div>
+          </div>
+
+          <!-- REGISTER BUTTON -->
+          <button type="submit" class="btn-login-blue" id="regSubmitBtn">
+            Create Account &amp; Sign In
+          </button>
+
+          <!-- SWITCH BACK TO SIGN IN -->
+          <div class="login-footer-links justify-content-center mt-3">
+            <span class="text-muted small">Already have an account?</span>
+            <a href="javascript:void(0)" class="forgot-link ms-2 fw-semibold" onclick="switchAuthTab('login')">
+              Sign In here &rarr;
+            </a>
+          </div>
+        </form>
+      </div>
+
     </div>
 
   </div>
@@ -366,18 +520,51 @@
   <script src="assets/js/app.js"></script>
 
   <script>
+    function switchAuthTab(mode) {
+      const loginContainer = document.getElementById('loginFormContainer');
+      const registerContainer = document.getElementById('registerFormContainer');
+      const tabLoginBtn = document.getElementById('tabLoginBtn');
+      const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+
+      if (mode === 'register') {
+        loginContainer.style.display = 'none';
+        registerContainer.style.display = 'block';
+        tabLoginBtn.classList.remove('active');
+        tabRegisterBtn.classList.add('active');
+      } else {
+        loginContainer.style.display = 'block';
+        registerContainer.style.display = 'none';
+        tabLoginBtn.classList.add('active');
+        tabRegisterBtn.classList.remove('active');
+      }
+    }
+
+    const ROLE_DEMO_CREDENTIALS = {
+      'Super Admin':   { email: 'superadmin@hms.com', pwd: 'admin123' },
+      'Admin':         { email: 'admin@hms.com',      pwd: 'admin123' },
+      'Receptionist':  { email: 'reception@hms.com',  pwd: 'admin123' },
+      'Doctor':        { email: 'ananya@hms.com',     pwd: 'admin123' },
+      'Lab':           { email: 'lab@hms.com',        pwd: 'admin123' },
+      'Investigation': { email: 'investigation@hms.com', pwd: 'admin123' },
+      'Pharmacy':      { email: 'pharmacy@hms.com',   pwd: 'admin123' },
+      'Store':         { email: 'store@hms.com',      pwd: 'admin123' },
+      'Patient':       { email: 'chandanap.murthy@gmail.com', pwd: 'password123' }
+    };
+
     function handleRoleChange() {
       const role = document.getElementById('roleSelect').value;
       const emailInput = document.getElementById('usernameInput');
-      if (role === 'Admin') emailInput.value = 'admin@medpulse.com';
-      else if (role === 'Doctor') emailInput.value = 'dr.priya@medpulse.com';
-      else if (role === 'Receptionist') emailInput.value = 'reception@medpulse.com';
-      else if (role === 'Patient') emailInput.value = 'sneha.r@example.com';
+      const pwdInput = document.getElementById('passwordInput');
+
+      if (ROLE_DEMO_CREDENTIALS[role]) {
+        emailInput.value = ROLE_DEMO_CREDENTIALS[role].email;
+        pwdInput.value = ROLE_DEMO_CREDENTIALS[role].pwd;
+      }
     }
 
-    function togglePasswordVisibility() {
-      const pwd = document.getElementById('passwordInput');
-      const icon = document.getElementById('togglePasswordIcon');
+    function togglePasswordVisibility(inputId, iconId) {
+      const pwd = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
       if (pwd.type === 'password') {
         pwd.type = 'text';
         icon.classList.replace('bi-eye', 'bi-eye-slash');
@@ -387,28 +574,154 @@
       }
     }
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
+      const alertBox = document.getElementById('loginAlertBox');
+      if (alertBox) {
+        alertBox.style.display = 'none';
+        alertBox.textContent = '';
+      }
+
       const role = document.getElementById('roleSelect').value;
-      const email = document.getElementById('usernameInput').value;
+      const email = document.getElementById('usernameInput').value.trim();
       const pwd = document.getElementById('passwordInput').value;
+      const btn = document.getElementById('loginSubmitBtn');
 
-      HMSAuth.login(role, email, pwd);
-      HMSApp.showToast(`Logged in successfully as ${role}! Redirecting...`, 'success');
+      if (!email || !pwd) {
+        if (alertBox) {
+          alertBox.textContent = 'Please enter both Email and Password.';
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
 
-      setTimeout(() => {
-        window.location.href = `pages/${role.toLowerCase()}/dashboard.html`;
-      }, 400);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing In...';
+
+      try {
+        const resp = await fetch('api/auth.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', email: email, password: pwd, role: role })
+        });
+
+        const data = await resp.json().catch(() => null);
+
+        if (!resp.ok || !data || !data.success) {
+          btn.disabled = false;
+          btn.innerHTML = 'Sign In';
+          const msg = (data && data.message) ? data.message : 'Invalid credentials or inactive account.';
+          if (alertBox) {
+            alertBox.textContent = msg;
+            alertBox.style.display = 'block';
+          }
+          return;
+        }
+
+        // Authenticated successfully! Save user and permissions into HMSAuth
+        const user = data.user;
+        if (typeof HMSAuth !== 'undefined') {
+          let customId = null;
+          if (typeof HMSDataStore !== 'undefined') {
+            const patients = HMSDataStore.getCollection('patients');
+            const foundP = patients.find(p => p.email && p.email.toLowerCase() === user.email.toLowerCase());
+            if (foundP) customId = foundP.id;
+          }
+          if (!customId && user.role.toLowerCase() === 'patient') {
+            customId = 'H1278';
+          }
+          HMSAuth.login(
+            user.role,
+            user.email,
+            pwd,
+            user.name,
+            user.avatar,
+            user.permissions,
+            user.is_super_admin,
+            customId
+          );
+        }
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Redirecting...';
+        setTimeout(() => {
+          window.location.href = data.redirect_url || HMSAuth.getDashboardPath(user.role);
+        }, 150);
+
+      } catch (err) {
+        console.error('Login error:', err);
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+        if (alertBox) {
+          alertBox.textContent = 'Network or server error during login. Please try again.';
+          alertBox.style.display = 'block';
+        }
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regNameInput').value.trim();
+      const email = document.getElementById('regEmailInput').value.trim();
+      const phone = document.getElementById('regPhoneInput').value.trim();
+      const role = document.getElementById('regRoleSelect').value;
+      const pwd = document.getElementById('regPasswordInput').value;
+      const btn = document.getElementById('regSubmitBtn');
+
+      if (!name || !email || !pwd) {
+        alert('Please fill in your name, email, and password.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Account...';
+
+      try {
+        const resp = await fetch('api/auth.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'register',
+            name: name,
+            email: email,
+            phone: phone,
+            role: role,
+            password: pwd
+          })
+        });
+
+        const data = await resp.json().catch(() => null);
+
+        if (resp.ok && data && data.success) {
+          const user = data.user;
+          if (typeof HMSAuth !== 'undefined') {
+            HMSAuth.login(user.role, user.email, pwd, user.name, user.avatar, user.permissions, user.is_super_admin);
+          }
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Redirecting...';
+          setTimeout(() => {
+            window.location.href = data.redirect_url || HMSAuth.getDashboardPath(user.role);
+          }, 200);
+          return;
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = 'Create Account';
+          alert((data && data.message) ? data.message : 'Registration failed. Email might already be registered.');
+        }
+      } catch (err) {
+        console.error('Registration error:', err);
+        btn.disabled = false;
+        btn.innerHTML = 'Create Account';
+        alert('Connection error during registration. Please check server.');
+      }
     }
 
     function quickLogin(role) {
       document.getElementById('roleSelect').value = role;
       handleRoleChange();
-      HMSAuth.login(role);
-      HMSApp.showToast(`Quick login as ${role}...`, 'info');
-      setTimeout(() => {
-        window.location.href = `pages/${role.toLowerCase()}/dashboard.html`;
-      }, 350);
+      const email = document.getElementById('usernameInput').value;
+      const pwd = document.getElementById('passwordInput').value;
+      
+      // Submit form
+      document.getElementById('loginSubmitBtn').click();
     }
   </script>
 </body>

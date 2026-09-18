@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostic Imaging & Investigation Suite - MedPulse HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- BANNER -->
+        <div class="card border-0 rounded-4 p-4 text-white mb-4 shadow-sm" style="background: linear-gradient(135deg, #0891b2 0%, #164e63 100%);">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+              <span class="badge bg-white text-info fw-semibold px-3 py-1 rounded-pill mb-2">Radiology, Sonography & Diagnostics</span>
+              <h2 class="fw-bold mb-1">Investigation Suite & Imaging Portal</h2>
+              <p class="mb-0 opacity-90 small">Schedule X-Rays, 12-Lead ECGs, Ultrasounds, MRI, CT Scans, and upload verified radiologist scan interpretations.</p>
+            </div>
+            <div>
+              <button class="btn btn-light text-info fw-semibold" onclick="openNewScanOrderModal()">
+                <i class="bi bi-plus-circle-fill me-1"></i> Book Diagnostic Scan
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-blue">
+              <div class="stat-pastel-title"><i class="bi bi-cpu-fill text-info"></i> Scans Today</div>
+              <div class="stat-pastel-count">24</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-coral">
+              <div class="stat-pastel-title"><i class="bi bi-clock-history text-danger"></i> Waiting Queue</div>
+              <div class="stat-pastel-count">4</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-green">
+              <div class="stat-pastel-title"><i class="bi bi-check2-circle text-success"></i> Imaging Verified</div>
+              <div class="stat-pastel-count">20</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-purple">
+              <div class="stat-pastel-title"><i class="bi bi-currency-rupee text-purple"></i> Daily Revenue</div>
+              <div class="stat-pastel-count">₹38,200</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE INVESTIGATION REQUISITION WORKLIST -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 overflow-hidden">
+          <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-person-video2 text-info me-2"></i> Diagnostic Imaging & Scanning Queue</h6>
+            <span class="badge bg-info text-dark rounded-pill">Active Schedule</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4">Order ID</th>
+                  <th>Patient Name</th>
+                  <th>Investigation Required</th>
+                  <th>Modality / Room</th>
+                  <th>Referring Doctor</th>
+                  <th>Scheduled Time</th>
+                  <th>Status</th>
+                  <th class="text-end pe-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="investigationQueueBody">
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">INV-RAD-401</td>
+                  <td>
+                    <div class="fw-bold text-dark">Vikram Singh</div>
+                    <div class="text-muted small">PAT-2026-005 • Male / 55y</div>
+                  </td>
+                  <td>12-Lead Electrocardiogram (ECG)</td>
+                  <td><span class="badge bg-light text-dark border">Cardio Suite 102</span></td>
+                  <td>Dr. Sarah Jenkins</td>
+                  <td class="text-muted small">Today, 10:15 AM</td>
+                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">Ready for Scan</span></td>
+                  <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-info" onclick="recordScanModal('INV-RAD-401', 'Vikram Singh', '12-Lead ECG')">
+                      <i class="bi bi-camera-fill me-1"></i> Log Result
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">INV-RAD-402</td>
+                  <td>
+                    <div class="fw-bold text-dark">Sneha R</div>
+                    <div class="text-muted small">H1268 • Female / 28y</div>
+                  </td>
+                  <td>Chest Digital X-Ray (PA View)</td>
+                  <td><span class="badge bg-light text-dark border">Radiology Bay 2</span></td>
+                  <td>Dr. Priya Sharma</td>
+                  <td class="text-muted small">Today, 10:45 AM</td>
+                  <td><span class="badge bg-info-subtle text-info border border-info-subtle">In Imaging</span></td>
+                  <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-info" onclick="recordScanModal('INV-RAD-402', 'Sneha R', 'Chest X-Ray')">
+                      <i class="bi bi-camera-fill me-1"></i> Log Result
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">INV-RAD-403</td>
+                  <td>
+                    <div class="fw-bold text-dark">James Wilson</div>
+                    <div class="text-muted small">PAT-2026-005 • Male / 55y</div>
+                  </td>
+                  <td>Ultrasound Whole Abdomen (USG)</td>
+                  <td><span class="badge bg-light text-dark border">Ultrasound Suite 3</span></td>
+                  <td>Dr. Gregory Hayes</td>
+                  <td class="text-muted small">Today, 09:30 AM</td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Verified</span></td>
+                  <td class="text-end pe-4">
+                    <a href="../documents.html" class="btn btn-sm btn-outline-success">
+                      <i class="bi bi-file-earmark-medical me-1"></i> View Scan
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MODALITIES & SUITE CALENDAR -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+          <h6 class="fw-bold text-dark mb-3"><i class="bi bi-hdd-network text-primary me-2"></i> Diagnostic Equipment Availability & Service Schedule</h6>
+          <div class="row g-3">
+            <div class="col-12 col-md-3">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <strong class="text-dark">Digital X-Ray Unit</strong>
+                  <span class="badge bg-success">Operational</span>
+                </div>
+                <div class="text-muted small">Bay 2 • Siemens Multix Fusion</div>
+                <div class="text-secondary small mt-2">18 Scans Completed Today</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <strong class="text-dark">Sonography (USG)</strong>
+                  <span class="badge bg-success">Operational</span>
+                </div>
+                <div class="text-muted small">Suite 3 • GE Healthcare Voluson</div>
+                <div class="text-secondary small mt-2">12 Scans Completed Today</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <strong class="text-dark">12-Lead ECG Station</strong>
+                  <span class="badge bg-success">Operational</span>
+                </div>
+                <div class="text-muted small">Cardio Room 102 • Philips PageWriter</div>
+                <div class="text-secondary small mt-2">22 Recordings Today</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <strong class="text-dark">CT Scanner 128-Slice</strong>
+                  <span class="badge bg-warning text-dark">Preventive Maint</span>
+                </div>
+                <div class="text-muted small">Basement Radiocenter • GE Revolution</div>
+                <div class="text-secondary small mt-2">Resuming at 02:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: RECORD SCAN -->
+  <div class="modal fade" id="scanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="saveScanReport(event)">
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title fw-bold"><i class="bi bi-camera-fill text-info me-2"></i> Log Radiologist Interpretation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="p-3 bg-light rounded-3 mb-3 small">
+              Order: <strong id="scanOrderId">INV-RAD-401</strong> • Patient: <strong id="scanPatientName">Vikram Singh</strong><br>
+              Procedure: <span id="scanProcedure" class="text-primary fw-bold">12-Lead ECG</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Radiological Findings & Impression</label>
+              <textarea class="form-control" id="scanFindings" rows="3" required>Normal sinus rhythm with rate 72 bpm. PR interval 160ms. No significant ST-T wave changes detected.</textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">DICOM / Scan Attachment Filename</label>
+              <input type="text" class="form-control" id="scanFilename" value="ECG_Strip_Vikram_Singh_Sep18.pdf">
+            </div>
+          </div>
+          <div class="modal-footer border-top bg-light">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-info btn-sm px-4 fw-semibold text-white">
+              <i class="bi bi-check-circle me-1"></i> Finalize Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BOOK DIAGNOSTIC SCAN -->
+  <div class="modal fade" id="newScanOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="createNewScanOrder(event)">
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title fw-bold text-dark"><i class="bi bi-camera-reels-fill text-info me-2"></i> Book Diagnostic Scan / Imaging</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Select Patient <span class="text-danger">*</span></label>
+              <select class="form-select" id="scanPatientSelect" required>
+                <option value="chandanap • H1278 • Female / 23y" selected>chandanap (H1278 - Female / 23y)</option>
+                <option value="Sneha R • H1268 • Female / 28y">Sneha R (H1268 - Female / 28y)</option>
+                <option value="Vikram Singh • PAT-2026-005 • Male / 55y">Vikram Singh (PAT-2026-005 - Male / 55y)</option>
+                <option value="Rahul K • H1042 • Male / 42y">Rahul K (H1042 - Male / 42y)</option>
+                <option value="Ananya P • H1105 • Female / 31y">Ananya P (H1105 - Female / 31y)</option>
+                <option value="David Chen • PAT-2026-003 • Male / 62y">David Chen (PAT-2026-003 - Male / 62y)</option>
+                <option value="Walk-in Patient • RAD-OPD • Outpatient">Walk-in Outpatient</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Investigation Required <span class="text-danger">*</span></label>
+              <select class="form-select" id="scanProcedureSelect" required onchange="autoSelectModality(this.value)">
+                <option value="Chest Digital X-Ray (PA View)">Chest Digital X-Ray (PA View) (₹550)</option>
+                <option value="12-Lead Electrocardiogram (ECG)">12-Lead Electrocardiogram (ECG) (₹400)</option>
+                <option value="Ultrasound Whole Abdomen (USG)">Ultrasound Whole Abdomen (USG) (₹1,200)</option>
+                <option value="CT Brain 128-Slice (Plain)">CT Brain 128-Slice (Plain) (₹2,800)</option>
+                <option value="2D Echocardiography & Color Doppler">2D Echocardiography & Color Doppler (₹1,500)</option>
+                <option value="MRI Lumbar Spine 1.5T">MRI Lumbar Spine 1.5T (₹4,500)</option>
+              </select>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Modality / Room <span class="text-danger">*</span></label>
+                <select class="form-select" id="scanRoomSelect" required>
+                  <option value="Radiology Bay 2">Radiology Bay 2 (Siemens)</option>
+                  <option value="Cardio Suite 102">Cardio Suite 102 (Philips)</option>
+                  <option value="Ultrasound Suite 3">Ultrasound Suite 3 (GE)</option>
+                  <option value="Basement Radiocenter">Basement Radiocenter (CT)</option>
+                  <option value="Echo Lab Bay 1">Echo Lab Bay 1</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Referring Doctor <span class="text-danger">*</span></label>
+                <select class="form-select" id="scanDoctorSelect" required>
+                  <option value="Dr. Priya Sharma">Dr. Priya Sharma (General)</option>
+                  <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (Cardiology)</option>
+                  <option value="Dr. Gregory Hayes">Dr. Gregory Hayes (Internal Med)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Priority Level <span class="text-danger">*</span></label>
+                <select class="form-select" id="scanPrioritySelect" required>
+                  <option value="Routine">Routine</option>
+                  <option value="Urgent / STAT">Urgent / STAT (Emergency)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Scheduled Slot</label>
+                <input type="text" class="form-control" id="scanSlotInput" value="Today, Immediate">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-top bg-light">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-info btn-sm px-4 fw-semibold text-white">
+              <i class="bi bi-calendar-check me-1"></i> Book &amp; Schedule Scan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../data/dummyData.js"></script>
+  <script src="../../assets/js/dataStore.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/apiService.js"></script>
+  <script src="../../assets/js/navigation.js"></script>
+
+  <script>
+    let scanModalInstance = null;
+    let newScanModalInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      HMSNav.init('investigation-portal', 'Investigation Suite', ['Home', 'Departments', 'Investigation'], 'investigation.view');
+      scanModalInstance = new bootstrap.Modal(document.getElementById('scanModal'));
+      newScanModalInstance = new bootstrap.Modal(document.getElementById('newScanOrderModal'));
+    });
+
+    function openNewScanOrderModal() {
+      newScanModalInstance.show();
+    }
+
+    function autoSelectModality(proc) {
+      const roomSelect = document.getElementById('scanRoomSelect');
+      if (proc.includes('X-Ray')) roomSelect.value = 'Radiology Bay 2';
+      else if (proc.includes('ECG')) roomSelect.value = 'Cardio Suite 102';
+      else if (proc.includes('Ultrasound')) roomSelect.value = 'Ultrasound Suite 3';
+      else if (proc.includes('CT')) roomSelect.value = 'Basement Radiocenter';
+      else if (proc.includes('Echo')) roomSelect.value = 'Echo Lab Bay 1';
+    }
+
+    function createNewScanOrder(e) {
+      e.preventDefault();
+      const patientRaw = document.getElementById('scanPatientSelect').value;
+      const parts = patientRaw.split(' • ');
+      const patientName = parts[0] || 'Patient';
+      const patientSub = parts.length > 1 ? parts.slice(1).join(' • ') : 'Outpatient';
+      const procedure = document.getElementById('scanProcedureSelect').value;
+      const room = document.getElementById('scanRoomSelect').value;
+      const doctor = document.getElementById('scanDoctorSelect').value;
+      const priority = document.getElementById('scanPrioritySelect').value;
+      const slot = document.getElementById('scanSlotInput').value || 'Today, Immediate';
+
+      const randomNum = Math.floor(404 + Math.random() * 50);
+      const orderId = `INV-RAD-${randomNum}`;
+
+      newScanModalInstance.hide();
+
+      const priorityBadge = priority.includes('STAT')
+        ? `<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Urgent / STAT</span>`
+        : `<span class="badge bg-warning-subtle text-warning border border-warning-subtle">Ready for Scan</span>`;
+
+      // Prepend row to table
+      const tbody = document.getElementById('investigationQueueBody');
+      const tr = document.createElement('tr');
+      tr.className = 'table-info-subtle';
+      tr.innerHTML = `
+        <td class="ps-4 font-monospace fw-bold text-primary">${orderId}</td>
+        <td>
+          <div class="fw-bold text-dark">${patientName}</div>
+          <div class="text-muted small">${patientSub}</div>
+        </td>
+        <td>${procedure}</td>
+        <td><span class="badge bg-light text-dark border">${room}</span></td>
+        <td>${doctor}</td>
+        <td class="text-muted small">${slot}</td>
+        <td>${priorityBadge}</td>
+        <td class="text-end pe-4">
+          <button class="btn btn-sm btn-outline-info" onclick="recordScanModal('${orderId}', '${patientName}', '${procedure}')">
+            <i class="bi bi-camera-fill me-1"></i> Log Result
+          </button>
+        </td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+
+      // Increment counters
+      const pastelCards = document.querySelectorAll('.stat-pastel-count');
+      if (pastelCards && pastelCards.length >= 2) {
+        let scans = parseInt(pastelCards[0].textContent) || 24;
+        pastelCards[0].textContent = scans + 1;
+
+        let queue = parseInt(pastelCards[1].textContent) || 4;
+        pastelCards[1].textContent = queue + 1;
+      }
+
+      alert(`Scan order ${orderId} scheduled successfully for ${patientName} (${procedure}) in ${room}!`);
+    }
+
+    function recordScanModal(orderId, patient, procedure) {
+      document.getElementById('scanOrderId').textContent = orderId;
+      document.getElementById('scanPatientName').textContent = patient;
+      document.getElementById('scanProcedure').textContent = procedure;
+      scanModalInstance.show();
+    }
+
+    async function saveScanReport(e) {
+      e.preventDefault();
+      const orderId = document.getElementById('scanOrderId').textContent.trim();
+      const patientName = document.getElementById('scanPatientName').textContent.trim();
+      const procedure = document.getElementById('scanProcedure').textContent.trim();
+      const findingsEl = document.getElementById('scanFindings') || document.getElementById('scanImpressions');
+      const impressions = findingsEl ? findingsEl.value : 'Normal radiological study findings.';
+      const filenameEl = document.getElementById('scanFilename');
+      const filename = filenameEl && filenameEl.value ? filenameEl.value : `${procedure}_${patientName}.pdf`;
+
+      scanModalInstance.hide();
+
+      // 1. Persist into electronic documents
+      const docRecord = {
+        id: `DOC-${Math.floor(1000 + Math.random() * 9000)}`,
+        name: filename.endsWith('.pdf') ? filename : `${filename}.pdf`,
+        category: 'Medical Reports',
+        uploadedDate: new Date().toISOString().split('T')[0],
+        uploadedBy: 'Radiology & Imaging Suite',
+        fileType: 'PDF',
+        fileSize: '3.8 MB',
+        status: 'Verified',
+        patientName: patientName,
+        details: { remarks: impressions }
+      };
+
+      if (window.HMSApi && window.HMSApi.documents) {
+        await window.HMSApi.documents.upload(docRecord);
+      } else if (window.HMSDataStore) {
+        window.HMSDataStore.addItem('documents', docRecord);
+      }
+
+      // 2. Update table row in real time
+      const rows = document.querySelectorAll('#investigationQueueBody tr');
+      rows.forEach(row => {
+        if (row.textContent.includes(orderId)) {
+          const statusCell = row.cells[6];
+          if (statusCell) {
+            statusCell.innerHTML = `<span class="badge bg-success-subtle text-success border border-success-subtle">Verified</span>`;
+          }
+          const actionCell = row.cells[7];
+          if (actionCell) {
+            actionCell.innerHTML = `
+              <a href="../documents.html" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-file-earmark-medical me-1"></i> View Scan
+              </a>
+            `;
+          }
+        }
+      });
+
+      // 3. Update KPI counts
+      const pastelCards = document.querySelectorAll('.stat-pastel-count');
+      if (pastelCards && pastelCards.length >= 3) {
+        let queue = parseInt(pastelCards[1].textContent) || 4;
+        if (queue > 0) pastelCards[1].textContent = queue - 1;
+
+        let verified = parseInt(pastelCards[2].textContent) || 20;
+        pastelCards[2].textContent = verified + 1;
+      }
+
+      if (confirm(`Diagnostic scan report for ${patientName} (${procedure}) has been verified and archived!\n\nWould you like to open Document Archives now to view it?`)) {
+        window.location.href = '../documents.html';
+      }
+    }
+  </script>
+</body>
+</html>

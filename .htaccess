@@ -1,0 +1,37 @@
+# =========================================================
+# Hospital Management System (HMS) - Apache Configuration
+# =========================================================
+
+# Set default index files
+DirectoryIndex index.php index.html
+
+# Prevent Directory Browsing
+Options -Indexes
+
+# Protect Sensitive Configuration and Database Files
+<FilesMatch "^(database\.(sql|sqlite)|\.env|composer\.(json|lock)|config\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Enable URL Rewriting if mod_rewrite is enabled
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /HMS/
+
+    # Security: Block access to hidden files (.git, .env, etc.)
+    RewriteRule ^\..+ - [F,L]
+</IfModule>
+
+# Caching configuration
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+</IfModule>

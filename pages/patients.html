@@ -350,7 +350,7 @@
     let patientToDeleteId = null;
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('patients', 'Patient Registration & Records', ['Home', 'Patient Management']);
+      HMSNav.init('patients', 'Patient Registration & Records', ['Home', 'Patient Management'], 'patient.view');
       await loadPatients();
 
       // Check if ID exists or generate
@@ -403,7 +403,33 @@
       };
 
       await HMSApi.patients.create(newPatient);
-      HMSApp.showToast(`Patient ${newPatient.name} (${newPatient.id}) registered successfully!`, 'success');
+
+      // Auto-provision Patient Portal Login & Dispatch Email Credentials if email provided
+      if (newPatient.email && newPatient.email.includes('@')) {
+        try {
+          const emailResp = await fetch('../api/users.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'auto_provision_patient',
+              name: newPatient.name,
+              email: newPatient.email,
+              phone: newPatient.phone,
+              patient_id: newPatient.id
+            })
+          });
+          const emailData = await emailResp.json();
+          if (emailData.success && emailData.email_dispatched) {
+            HMSApp.showToast(`Patient ${newPatient.name} registered! Portal credentials sent to ${newPatient.email}`, 'success');
+          } else {
+            HMSApp.showToast(`Patient ${newPatient.name} (${newPatient.id}) registered successfully!`, 'success');
+          }
+        } catch (err) {
+          HMSApp.showToast(`Patient ${newPatient.name} (${newPatient.id}) registered successfully!`, 'success');
+        }
+      } else {
+        HMSApp.showToast(`Patient ${newPatient.name} (${newPatient.id}) registered successfully!`, 'success');
+      }
 
       // Refresh table and switch to Directory tab
       await loadPatients();

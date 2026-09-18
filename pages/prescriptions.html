@@ -267,7 +267,7 @@
     let allConsultations = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('prescriptions', 'Prescription Management', ['Home', 'Clinical', 'Prescriptions']);
+      HMSNav.init('prescriptions', 'Prescription Management', ['Home', 'Clinical', 'Prescriptions'], 'prescriptions.manage');
       await loadInitialData();
     });
 

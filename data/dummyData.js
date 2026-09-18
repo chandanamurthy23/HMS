@@ -51,6 +51,21 @@ const INITIAL_DUMMY_DATA = {
       registeredDate: "2026-09-05"
     },
     {
+      id: "H1278",
+      name: "chandanap",
+      age: 23,
+      dob: "2003-05-14",
+      gender: "Female",
+      phone: "+91 98450 12345",
+      email: "chandanap.murthy@gmail.com",
+      address: "Bangalore, Karnataka",
+      bloodGroup: "A+",
+      emergencyContact: "Family - +91 98450 99999",
+      medicalHistory: "Healthy. No known drug allergies.",
+      status: "Active",
+      registeredDate: "2026-09-18"
+    },
+    {
       id: "PAT-2026-001",
       name: "Robert Harrison",
       age: 48,
@@ -358,6 +373,20 @@ const INITIAL_DUMMY_DATA = {
   ],
 
   bills: [
+    {
+      billId: "INV-2026-H1278",
+      patientId: "H1278",
+      patientName: "chandanap",
+      date: "2026-09-18",
+      doctorName: "Dr. Ananya Sharma",
+      consultationFee: 500.00,
+      testCharges: 900.00,
+      medicineCharges: 155.00,
+      otherCharges: 0.00,
+      totalAmount: 1555.00,
+      paymentStatus: "Paid",
+      paymentMethod: "UPI / Online Settlement"
+    },
     {
       billId: "INV-2026-H1268",
       patientId: "H1268",

@@ -159,7 +159,7 @@
     let allSummaries = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('discharge-summary', 'Discharge Summary', ['Home', 'Clinical', 'Discharge Summary']);
+      HMSNav.init('discharge-summary', 'Discharge Summary', ['Home', 'Clinical', 'Discharge Summary'], 'discharge.manage');
       await loadDischargeSummaries();
     });
 

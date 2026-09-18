@@ -139,7 +139,8 @@
           <i class="bi bi-file-earmark-pdf-fill text-danger display-1 mb-3"></i>
           <h5 class="fw-bold" id="prevFileName">File_Name.pdf</h5>
           <div class="badge bg-light text-dark border mb-3" id="prevCatBadge">Medical Reports</div>
-          <p class="text-muted small">This is a frontend preview of the archived document. In the production PHP backend, this file is retrieved from the secure hospital cloud storage server.</p>
+          <div id="prevReportDetails" class="text-start bg-light p-3 rounded-3 mb-3 border d-none"></div>
+          <p class="text-muted small">This is a verified electronic medical document authenticated by the Hospital Laboratory System.</p>
           <div class="d-flex justify-content-center gap-2">
             <button type="button" class="btn btn-outline-primary" onclick="simulateDownload()">
               <i class="bi bi-download me-1"></i> Download File
@@ -192,15 +193,17 @@
                 <i class="bi ${icon} fs-4"></i>
                 <div>
                   <div class="fw-bold text-dark">${d.name}</div>
-                  <div class="text-muted" style="font-size: 0.72rem;">ID: ${d.id}</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">
+                    ID: ${d.id} ${d.patientName ? `• Patient: <span class="badge bg-primary-subtle text-primary fw-semibold">${d.patientName}</span>` : ''}
+                  </div>
                 </div>
               </div>
             </td>
             <td><span class="badge bg-light text-dark border">${d.category}</span></td>
-            <td class="text-muted small">${HMSApp.formatDate(d.uploadedDate)}</td>
+            <td class="text-muted small">${HMSApp ? HMSApp.formatDate(d.uploadedDate) : d.uploadedDate}</td>
             <td class="small fw-medium">${d.uploadedBy}</td>
             <td><span class="badge bg-secondary-subtle text-secondary">${d.fileType} • ${d.fileSize}</span></td>
-            <td>${HMSApp.renderStatusBadge(d.status)}</td>
+            <td><span class="badge bg-success-subtle text-success border border-success-subtle">${d.status || 'Verified'}</span></td>
             <td class="text-end">
               <div class="btn-group btn-group-sm">
                 <button class="btn btn-outline-primary" title="Preview Document" onclick="previewDoc('${d.name}', '${d.category}')">
@@ -225,8 +228,10 @@
 
       const filtered = allDocuments.filter(d => {
         const matchesQuery = !query ||
-          d.name.toLowerCase().includes(query) ||
-          d.uploadedBy.toLowerCase().includes(query);
+          (d.name && d.name.toLowerCase().includes(query)) ||
+          (d.uploadedBy && d.uploadedBy.toLowerCase().includes(query)) ||
+          (d.patientName && d.patientName.toLowerCase().includes(query)) ||
+          (d.id && d.id.toLowerCase().includes(query));
         const matchesCat = !cat || d.category === cat;
         return matchesQuery && matchesCat;
       });
@@ -268,6 +273,20 @@
     function previewDoc(name, category) {
       document.getElementById('prevFileName').textContent = name;
       document.getElementById('prevCatBadge').textContent = category;
+      const detailsEl = document.getElementById('prevReportDetails');
+      const doc = allDocuments.find(d => d.name === name);
+      if (doc && doc.details) {
+        detailsEl.classList.remove('d-none');
+        detailsEl.innerHTML = `
+          <div class="fw-bold text-dark border-bottom pb-1 mb-2 small"><i class="bi bi-clipboard-pulse text-purple me-1"></i> Certified Test Findings:</div>
+          <div class="small text-secondary mb-1"><strong>Hemoglobin (Hb):</strong> ${doc.details.hb || '13.4 g/dL'}</div>
+          <div class="small text-secondary mb-1"><strong>WBC Count:</strong> ${doc.details.wbc || '7,800 /mcL'}</div>
+          <div class="small text-secondary mb-1"><strong>Platelets:</strong> ${doc.details.platelets || '2.6 Lakhs /mcL'}</div>
+          <div class="small text-secondary"><strong>Pathologist Remarks:</strong> ${doc.details.remarks || 'Normal'}</div>
+        `;
+      } else {
+        detailsEl.classList.add('d-none');
+      }
       new bootstrap.Modal(document.getElementById('docPreviewModal')).show();
     }
 

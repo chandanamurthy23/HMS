@@ -118,7 +118,7 @@
     let queueList = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('waiting-time', 'Waiting Room Tracker', ['Home', 'Operations', 'Waiting Time']);
+      HMSNav.init('waiting-time', 'Waiting Room Tracker', ['Home', 'Operations', 'Waiting Time'], 'opd.reception');
       await loadQueue();
     });
 

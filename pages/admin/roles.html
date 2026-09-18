@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role & Permission Management - HMS Hospital Administration</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../../assets/css/style.css" rel="stylesheet">
+  <style>
+    .role-card-item {
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 1.25rem;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+    .role-card-item:hover, .role-card-item.active {
+      border-color: #0d6efd;
+      background: #f8faff;
+      box-shadow: 0 4px 14px rgba(13, 110, 253, 0.12);
+    }
+    .perm-module-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+    .perm-module-header {
+      background: #f8fafc;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .perm-checkbox-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      transition: background 0.15s ease;
+    }
+    .perm-checkbox-item:last-child {
+      border-bottom: none;
+    }
+    .perm-checkbox-item:hover {
+      background: #fbfcfe;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- PAGE TITLE -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+          <div>
+            <h2 class="fw-bold text-dark mb-1">Role & Permission Management</h2>
+            <p class="text-muted mb-0 small">Create custom hospital roles and dynamically assign granular departmental access rights and API capabilities.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" onclick="loadRolesData()">
+              <i class="bi bi-arrow-clockwise me-1"></i> Reload
+            </button>
+            <button class="btn btn-primary" onclick="openCreateRoleModal()">
+              <i class="bi bi-shield-plus me-1"></i> Create Custom Role
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- LEFT COLUMN: ROLES LIST -->
+          <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-primary me-2"></i> System & Custom Roles</h6>
+                <span class="badge bg-primary rounded-pill" id="rolesBadgeCount">0 Roles</span>
+              </div>
+              <div class="d-flex flex-column gap-2" id="rolesListContainer">
+                <div class="text-center py-4 text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Loading roles...</div>
+              </div>
+            </div>
+
+            <!-- USERS ASSIGNED TO CURRENT ROLE -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-people text-secondary me-2"></i> Users Assigned to Role</h6>
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill" id="assignedUsersCount">0 Users</span>
+              </div>
+              <div class="list-group list-group-flush small" id="assignedUsersList">
+                <div class="text-muted small py-2 text-center">Select a role above to view assigned staff.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: GRANULAR PERMISSION MATRIX -->
+          <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+              
+              <!-- ACTIVE ROLE BANNER -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 mb-3 border-bottom">
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <h4 class="fw-bold text-dark mb-0" id="activeRoleTitle">Super Admin</h4>
+                    <span class="badge bg-danger" id="activeRoleTag">System Role</span>
+                  </div>
+                  <p class="text-muted small mb-0 mt-1" id="activeRoleDescription">Full administrative control across all hospital departments.</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                  <button class="btn btn-sm btn-outline-secondary" onclick="selectAllPerms(true)">Select All</button>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="selectAllPerms(false)">Deselect All</button>
+                  <button class="btn btn-sm btn-success px-3 fw-semibold" id="savePermsBtn" onclick="saveActiveRolePermissions()">
+                    <i class="bi bi-check2-circle me-1"></i> Save Changes
+                  </button>
+                </div>
+              </div>
+
+              <!-- PERMISSIONS GROUPED ACCORDION / CARDS -->
+              <form id="permissionMatrixForm" onsubmit="event.preventDefault()">
+                <div id="permissionMatrixContainer">
+                  <div class="text-center py-5 text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Loading permission catalog...</div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE CUSTOM ROLE -->
+  <div class="modal fade" id="createRoleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="createCustomRole(event)">
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title fw-bold"><i class="bi bi-shield-plus text-primary me-2"></i> Create Custom Role</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Role Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="newRoleName" placeholder="e.g. Senior OPD Registrar" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Description</label>
+              <textarea class="form-control" id="newRoleDesc" rows="3" placeholder="Define the duties and access boundaries for this role..."></textarea>
+            </div>
+            <div class="alert alert-info small rounded-3 mb-0">
+              <i class="bi bi-info-circle me-1"></i> After creating the role, you can configure its exact departmental permissions in the permission matrix.
+            </div>
+          </div>
+          <div class="modal-footer border-top bg-light">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm px-4" id="submitNewRoleBtn">Create Role</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/navigation.js"></script>
+
+  <script>
+    let allRoles = [];
+    let systemPermGrouped = {};
+    let activeRoleId = null;
+    let createRoleModalInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      HMSNav.init('roles', 'Roles & Permissions', ['Home', 'Administration', 'Roles'], 'roles.manage');
+      createRoleModalInstance = new bootstrap.Modal(document.getElementById('createRoleModal'));
+      loadRolesData();
+    });
+
+    async function loadRolesData() {
+      try {
+        // 1. Fetch all permissions catalog
+        const pResp = await fetch('../../api/roles.php?action=permissions');
+        const pData = await pResp.json();
+        if (pData.success) {
+          systemPermGrouped = pData.grouped;
+        }
+
+        // 2. Fetch all roles
+        const rResp = await fetch('../../api/roles.php?action=list');
+        const rData = await rResp.json();
+        if (rData.success && Array.isArray(rData.roles)) {
+          allRoles = rData.roles;
+          renderRolesList(allRoles);
+
+          // Select first role if none selected
+          if (!activeRoleId && allRoles.length > 0) {
+            selectRole(allRoles[0].id);
+          } else if (activeRoleId) {
+            selectRole(activeRoleId);
+          }
+        }
+      } catch (err) {
+        console.error('Error loading roles data:', err);
+      }
+    }
+
+    function renderRolesList(roles) {
+      const container = document.getElementById('rolesListContainer');
+      document.getElementById('rolesBadgeCount').textContent = `${roles.length} Roles`;
+
+      container.innerHTML = roles.map(r => {
+        const isCurrent = (r.id === activeRoleId);
+        const activeClass = isCurrent ? 'active border-primary' : '';
+        const systemTag = r.is_system 
+          ? `<span class="badge bg-light text-secondary border">Core</span>` 
+          : `<span class="badge bg-info-subtle text-info border border-info-subtle">Custom</span>`;
+
+        return `
+          <div class="role-card-item ${activeClass}" onclick="selectRole(${r.id})">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <strong class="text-dark">${escapeHtml(r.name)}</strong>
+              ${systemTag}
+            </div>
+            <p class="text-muted small mb-2 text-truncate" title="${escapeHtml(r.description)}">${escapeHtml(r.description || 'Configured hospital role')}</p>
+            <div class="d-flex align-items-center justify-content-between small text-muted">
+              <span><i class="bi bi-people me-1"></i> ${r.user_count} Users</span>
+              <span><i class="bi bi-shield-check me-1 text-primary"></i> ${r.perm_count} Perms</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function selectRole(roleId) {
+      activeRoleId = roleId;
+      const role = allRoles.find(r => r.id === roleId);
+      if (!role) return;
+
+      renderRolesList(allRoles);
+
+      document.getElementById('activeRoleTitle').textContent = role.name;
+      document.getElementById('activeRoleTag').textContent = role.is_system ? 'Core System Role' : 'Custom Configured Role';
+      document.getElementById('activeRoleTag').className = role.is_system ? 'badge bg-danger' : 'badge bg-info text-dark';
+      document.getElementById('activeRoleDescription').textContent = role.description || 'Configured hospital department role.';
+
+      // Fetch role details & assigned users
+      try {
+        const resp = await fetch(`../../api/roles.php?action=details&id=${roleId}`);
+        const data = await resp.json();
+        if (data.success && data.role) {
+          renderPermissionMatrix(data.role.permissions || []);
+          renderAssignedUsers(data.role.users || []);
+        }
+      } catch (err) {
+        console.error('Error fetching role details:', err);
+      }
+    }
+
+    function renderPermissionMatrix(assignedCodes) {
+      const container = document.getElementById('permissionMatrixContainer');
+      const isSuperAdminRole = (allRoles.find(r => r.id === activeRoleId)?.slug === 'super_admin');
+
+      let html = '';
+      for (const [moduleName, perms] of Object.entries(systemPermGrouped)) {
+        html += `
+          <div class="perm-module-card">
+            <div class="perm-module-header">
+              <strong class="text-dark"><i class="bi bi-layers-fill text-primary me-2"></i> ${escapeHtml(moduleName)}</strong>
+              <div class="form-check form-check-inline mb-0">
+                <input class="form-check-input" type="checkbox" id="mod_toggle_${sanitizeId(moduleName)}" onchange="toggleModulePerms('${sanitizeId(moduleName)}', this.checked)">
+                <label class="form-check-label small fw-semibold text-secondary" for="mod_toggle_${sanitizeId(moduleName)}">Toggle All</label>
+              </div>
+            </div>
+            <div class="perm-module-body" id="body_${sanitizeId(moduleName)}">
+              ${perms.map(p => {
+                const checked = (isSuperAdminRole || assignedCodes.includes(p.code)) ? 'checked' : '';
+                return `
+                  <div class="perm-checkbox-item">
+                    <input class="form-check-input mt-1 perm-code-checkbox" type="checkbox" value="${escapeHtml(p.code)}" id="perm_${escapeHtml(p.code)}" ${checked}>
+                    <div>
+                      <label class="form-check-label fw-bold text-dark small d-block mb-0" for="perm_${escapeHtml(p.code)}">
+                        ${escapeHtml(p.name)}
+                        <code class="text-primary ms-1" style="font-size: 0.72rem;">${escapeHtml(p.code)}</code>
+                      </label>
+                      <span class="text-muted small" style="font-size: 0.78rem;">${escapeHtml(p.description)}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function renderAssignedUsers(users) {
+      const container = document.getElementById('assignedUsersList');
+      document.getElementById('assignedUsersCount').textContent = `${users.length} Users`;
+
+      if (users.length === 0) {
+        container.innerHTML = `<div class="text-muted small py-3 text-center">No staff users currently assigned to this role.</div>`;
+        return;
+      }
+
+      container.innerHTML = users.map(u => `
+        <div class="list-group-item px-2 py-2 d-flex align-items-center justify-content-between border-bottom">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-primary text-white small fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+              ${(u.name || 'U').charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div class="fw-semibold text-dark text-truncate" style="max-width: 140px;">${escapeHtml(u.name)}</div>
+              <div class="text-muted" style="font-size: 0.72rem;">${escapeHtml(u.email)}</div>
+            </div>
+          </div>
+          <span class="badge ${u.status === 'active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'}" style="font-size: 0.65rem;">
+            ${escapeHtml(u.status || 'active')}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function toggleModulePerms(modId, isChecked) {
+      const body = document.getElementById(`body_${modId}`);
+      if (body) {
+        body.querySelectorAll('.perm-code-checkbox').forEach(cb => {
+          cb.checked = isChecked;
+        });
+      }
+    }
+
+    function selectAllPerms(check) {
+      document.querySelectorAll('.perm-code-checkbox').forEach(cb => {
+        cb.checked = check;
+      });
+    }
+
+    async function saveActiveRolePermissions() {
+      if (!activeRoleId) return;
+      const btn = document.getElementById('savePermsBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+      const selectedCodes = [];
+      document.querySelectorAll('.perm-code-checkbox:checked').forEach(cb => {
+        selectedCodes.push(cb.value);
+      });
+
+      try {
+        const resp = await fetch('../../api/roles.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'update_permissions',
+            role_id: activeRoleId,
+            permissions: selectedCodes
+          })
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          alert(data.message || 'Permissions updated successfully!');
+          loadRolesData();
+        } else {
+          alert(data.message || 'Error updating permissions.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Server communication error.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Save Changes';
+      }
+    }
+
+    function openCreateRoleModal() {
+      document.getElementById('newRoleName').value = '';
+      document.getElementById('newRoleDesc').value = '';
+      createRoleModalInstance.show();
+    }
+
+    async function createCustomRole(e) {
+      e.preventDefault();
+      const name = document.getElementById('newRoleName').value.trim();
+      const desc = document.getElementById('newRoleDesc').value.trim();
+      const btn = document.getElementById('submitNewRoleBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Creating...';
+
+      try {
+        const resp = await fetch('../../api/roles.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'create',
+            name: name,
+            description: desc,
+            permissions: []
+          })
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          createRoleModalInstance.hide();
+          activeRoleId = data.role_id;
+          loadRolesData();
+        } else {
+          alert(data.message || 'Failed to create role.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to connect to server.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Create Role';
+      }
+    }
+
+    function sanitizeId(str) {
+      return (str || '').replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

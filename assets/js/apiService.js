@@ -449,6 +449,100 @@ const HMSApi = (function () {
       }
     },
 
+    // ================= DOCUMENTS =================
+    documents: {
+      async getAll() {
+        await delay(50);
+        let docs = HMSDataStore.getCollection('documents');
+        if (!docs || docs.length === 0) {
+          docs = [
+            {
+              id: 'DOC-1001',
+              name: 'Complete Blood Count (CBC) - Sneha R.pdf',
+              category: 'Medical Reports',
+              uploadedDate: new Date().toISOString().split('T')[0],
+              uploadedBy: 'Central Diagnostic Lab / Super Admin',
+              fileType: 'PDF',
+              fileSize: '245 KB',
+              status: 'Verified',
+              patientName: 'Sneha R',
+              patientId: 'H1268',
+              details: {
+                hb: '13.4 g/dL',
+                wbc: '7,800 /mcL',
+                platelets: '2.6 Lakhs /mcL',
+                remarks: 'Normal peripheral smear findings. No toxic granules seen.'
+              }
+            },
+            {
+              id: 'DOC-1002',
+              name: 'HbA1c & Fasting Glucose - David Chen.pdf',
+              category: 'Medical Reports',
+              uploadedDate: new Date().toISOString().split('T')[0],
+              uploadedBy: 'Central Diagnostic Lab',
+              fileType: 'PDF',
+              fileSize: '180 KB',
+              status: 'Verified',
+              patientName: 'David Chen',
+              patientId: 'PAT-2026-003'
+            },
+            {
+              id: 'DOC-1003',
+              name: 'Brain MRI Scan Series 3 - Rahul K.pdf',
+              category: 'Medical Reports',
+              uploadedDate: new Date().toISOString().split('T')[0],
+              uploadedBy: 'Radiology Dept',
+              fileType: 'PDF',
+              fileSize: '4.2 MB',
+              status: 'Verified',
+              patientName: 'Rahul K',
+              patientId: 'H1042'
+            },
+            {
+              id: 'DOC-1004',
+              name: 'Inpatient Health Insurance Claim Form.pdf',
+              category: 'Patient Documents',
+              uploadedDate: new Date().toISOString().split('T')[0],
+              uploadedBy: 'Admissions Desk',
+              fileType: 'PDF',
+              fileSize: '512 KB',
+              status: 'Approved',
+              patientName: 'Sneha R',
+              patientId: 'H1268'
+            }
+          ];
+          HMSDataStore.saveCollection('documents', docs);
+        }
+        return docs;
+      },
+
+      async upload(docData) {
+        await delay(80);
+        const docs = HMSDataStore.getCollection('documents');
+        const nextId = `DOC-${1000 + docs.length + 1}`;
+        const newDoc = {
+          id: docData.id || nextId,
+          name: docData.name || 'Diagnostic_Report.pdf',
+          category: docData.category || 'Medical Reports',
+          uploadedDate: docData.uploadedDate || new Date().toISOString().split('T')[0],
+          uploadedBy: docData.uploadedBy || 'Central Diagnostic Lab',
+          fileType: docData.fileType || 'PDF',
+          fileSize: docData.fileSize || '245 KB',
+          status: docData.status || 'Verified',
+          patientName: docData.patientName || '',
+          patientId: docData.patientId || '',
+          details: docData.details || null
+        };
+        HMSDataStore.addItem('documents', newDoc);
+        return newDoc;
+      },
+
+      async delete(id) {
+        await delay(50);
+        return HMSDataStore.deleteItem('documents', 'id', id);
+      }
+    },
+
     // ================= STATS & SUMMARY METRICS =================
     stats: {
       async getOverview() {

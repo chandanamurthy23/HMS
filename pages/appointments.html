@@ -324,7 +324,7 @@
     let currentTimeline = 'All';
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('appointments', 'Appointment Booking & Queue', ['Home', 'Appointments']);
+      HMSNav.init('appointments', 'Appointment Booking & Queue', ['Home', 'Appointments'], 'appointment.view');
       await loadInitialData();
 
       document.getElementById('apptSearchInput').addEventListener('input', filterAppointments);

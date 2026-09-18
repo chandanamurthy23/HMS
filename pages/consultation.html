@@ -221,7 +221,7 @@
     let appointmentIdParam = null;
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('consultation', 'Clinical Consultation Room', ['Home', 'Clinical', 'Consultation']);
+      HMSNav.init('consultation', 'Clinical Consultation Room', ['Home', 'Clinical', 'Consultation'], 'consultation.manage');
 
       const urlParams = new URLSearchParams(window.location.search);
       const preselectedPatientId = urlParams.get('patientId') || 'H1268';

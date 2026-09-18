@@ -7,6 +7,110 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="../assets/css/style.css" rel="stylesheet">
+  <style>
+    /* ================= DEDICATED INVOICE PRINT STYLES ================= */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm 15mm;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      /* Hide entire application background, sidebar, navigation, and modal frame */
+      .hms-wrapper,
+      .no-print,
+      .modal-backdrop,
+      .btn,
+      .btn-close,
+      .modal-header,
+      .modal-footer {
+        display: none !important;
+      }
+
+      /* Reset Bootstrap modal to standard flat page document */
+      .modal {
+        position: static !important;
+        display: block !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        z-index: 1 !important;
+        background: transparent !important;
+      }
+
+      .modal-dialog {
+        position: static !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+      }
+
+      .modal-content {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+
+      .modal-body {
+        padding: 0 !important;
+      }
+
+      #printableBillDocument {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      #printableBillDocument > div {
+        border: 2px solid #1e293b !important;
+        padding: 24px !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+      }
+
+      .table-responsive {
+        overflow: visible !important;
+      }
+
+      .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .table th, .table td {
+        border: 1px solid #94a3b8 !important;
+        padding: 8px 12px !important;
+        color: #000000 !important;
+        font-size: 11pt !important;
+        background: transparent !important;
+      }
+
+      .table thead th {
+        background-color: #f1f5f9 !important;
+        font-weight: 700 !important;
+      }
+
+      .badge.bg-success {
+        border: 1.5px solid #16a34a !important;
+        color: #16a34a !important;
+        background: transparent !important;
+        font-weight: 700 !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -28,17 +132,17 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
               <div class="d-flex align-items-center gap-3">
                 <div class="rounded-circle bg-success-subtle text-success fw-bold d-inline-flex align-items-center justify-content-center fs-4" style="width: 52px; height: 52px;">
-                  SR
+                  CP
                 </div>
                 <div>
                   <div class="d-flex align-items-center gap-2">
-                    <h4 class="fw-bold mb-0 text-dark" id="billPatientName">Sneha R</h4>
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="billPatientId">H1268</span>
+                    <h4 class="fw-bold mb-0 text-dark" id="billPatientName">chandanap</h4>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="billPatientId">H1278</span>
                   </div>
                   <div class="text-muted small mt-1">
-                    Age: <span id="billPatientAge">28</span> • 
+                    Age: <span id="billPatientAge">23</span> • 
                     Gender: <span id="billPatientGender">Female</span> • 
-                    Attending Doctor: <strong class="text-dark">Dr. Priya S (Cardiology)</strong>
+                    Attending Doctor: <strong class="text-dark">Dr. Ananya Sharma (Cardiology)</strong>
                   </div>
                 </div>
               </div>
@@ -81,7 +185,7 @@
                     <tr>
                       <td>
                         <div class="fw-bold text-dark">Specialist OPD Consultation</div>
-                        <div class="text-muted small">Dr. Priya S (Cardiology Clinic)</div>
+                        <div class="text-muted small">Dr. Ananya Sharma (Cardiology Clinic)</div>
                       </td>
                       <td><span class="badge bg-light text-secondary border">Consultation</span></td>
                       <td class="text-end fw-semibold">₹500.00</td>
@@ -89,24 +193,32 @@
                     <tr>
                       <td>
                         <div class="fw-bold text-dark">Diagnostic Laboratory Tests</div>
-                        <div class="text-muted small">Complete Blood Count (CBC) + Widal Slide Test</div>
+                        <div class="text-muted small">Complete Blood Count (CBC) Pathology</div>
                       </td>
                       <td><span class="badge bg-info-subtle text-info">Laboratory</span></td>
-                      <td class="text-end fw-semibold">₹800.00</td>
+                      <td class="text-end fw-semibold">₹350.00</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="fw-bold text-dark">Radiology & Diagnostic Imaging</div>
+                        <div class="text-muted small">Chest Digital X-Ray (PA View)</div>
+                      </td>
+                      <td><span class="badge bg-purple-subtle text-purple" style="background:#f3e8ff; color:#7e22ce;">Radiology</span></td>
+                      <td class="text-end fw-semibold">₹550.00</td>
                     </tr>
                     <tr>
                       <td>
                         <div class="fw-bold text-dark">Prescription Medicines & Pharmacy</div>
-                        <div class="text-muted small">Paracetamol 500mg, Vitamin D3, Calcium Carbonate</div>
+                        <div class="text-muted small">Amoxicillin 500mg (1-0-1), Paracetamol 650mg (SOS)</div>
                       </td>
                       <td><span class="badge bg-danger-subtle text-danger">Pharmacy</span></td>
-                      <td class="text-end fw-semibold">₹450.00</td>
+                      <td class="text-end fw-semibold">₹155.00</td>
                     </tr>
                   </tbody>
                   <tfoot class="table-light">
                     <tr>
                       <th colspan="2" class="text-end fs-6">Total Amount Payable:</th>
-                      <th class="text-end fs-5 text-primary fw-bold" id="billTotalAmount">₹1,750.00</th>
+                      <th class="text-end fs-5 text-primary fw-bold" id="billTotalAmount">₹1,555.00</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -121,11 +233,11 @@
               
               <div class="d-flex justify-content-between mb-2 small">
                 <span class="text-muted">Invoice No:</span>
-                <strong class="text-dark" id="billInvoiceNo">INV-2026-H1268</strong>
+                <strong class="text-dark" id="billInvoiceNo">INV-2026-H1278</strong>
               </div>
               <div class="d-flex justify-content-between mb-2 small">
                 <span class="text-muted">Billing Date:</span>
-                <span class="text-dark">2026-09-16</span>
+                <span class="text-dark">2026-09-18</span>
               </div>
               <div class="d-flex justify-content-between mb-2 small">
                 <span class="text-muted">Payment Mode:</span>
@@ -205,18 +317,18 @@
               </div>
               <div class="text-end">
                 <span class="badge bg-success fs-6">PAID IN FULL</span>
-                <div class="text-muted small mt-1">Invoice: INV-2026-H1268</div>
+                <div class="text-muted small mt-1">Invoice: <span id="prnInvoiceNo">INV-2026-H1278</span></div>
               </div>
             </div>
 
             <div class="row g-2 mb-3 bg-light p-3 rounded small">
               <div class="col-6">
-                <div><strong>Patient:</strong> <span id="prnBillPatient">Sneha R</span></div>
-                <div><strong>Patient ID:</strong> <span id="prnBillPatientId">H1268</span></div>
+                <div><strong>Patient:</strong> <span id="prnBillPatient">chandanap</span></div>
+                <div><strong>Patient ID:</strong> <span id="prnBillPatientId">H1278</span></div>
               </div>
               <div class="col-6 text-end">
-                <div><strong>Date:</strong> 2026-09-16</div>
-                <div><strong>Doctor:</strong> Dr. Priya S (Cardiology)</div>
+                <div><strong>Date:</strong> <span id="prnBillDate">2026-09-18</span></div>
+                <div><strong>Doctor:</strong> <span id="prnBillDoctor">Dr. Ananya Sharma (Cardiology)</span></div>
               </div>
             </div>
 
@@ -229,27 +341,32 @@
                     <th class="text-end">Amount</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="prnBillItemsBody">
                   <tr>
-                    <td>Specialist Consultation (Dr. Priya S)</td>
+                    <td>Specialist Consultation (Dr. Ananya Sharma)</td>
                     <td>Consultation</td>
                     <td class="text-end">₹500.00</td>
                   </tr>
                   <tr>
-                    <td>Diagnostic Lab Tests (CBC + Widal)</td>
+                    <td>Diagnostic Lab Tests (Complete Blood Count - CBC)</td>
                     <td>Laboratory</td>
-                    <td class="text-end">₹800.00</td>
+                    <td class="text-end">₹350.00</td>
                   </tr>
                   <tr>
-                    <td>Pharmacy Medication Order</td>
+                    <td>Radiology Diagnostic Imaging (Chest Digital X-Ray)</td>
+                    <td>Radiology</td>
+                    <td class="text-end">₹550.00</td>
+                  </tr>
+                  <tr>
+                    <td>Pharmacy Medication Order (Amoxicillin + Paracetamol)</td>
                     <td>Pharmacy</td>
-                    <td class="text-end">₹450.00</td>
+                    <td class="text-end">₹155.00</td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr class="table-light">
-                    <th colspan="2" class="text-end">Total Amount Paid:</th>
-                    <th class="text-end text-primary fw-bold">₹1,750.00</th>
+                    <th colspan="2" class="text-end">Total Settled:</th>
+                    <th class="text-end text-primary" id="prnBillTotal">₹1,555.00</th>
                   </tr>
                 </tfoot>
               </table>
@@ -290,7 +407,7 @@
     let allPatients = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      HMSNav.init('billing', 'Billing & Invoicing', ['Home', 'Operations', 'Billing']);
+      HMSNav.init('billing', 'Billing & Invoicing', ['Home', 'Operations', 'Billing'], 'billing.view');
       await loadBillingData();
     });
 
@@ -300,12 +417,14 @@
 
       // Populate patient select dropdown
       const pSel = document.getElementById('billPatientSelect');
+      const targetId = allPatients.some(p => p.id === 'H1278') ? 'H1278' : (allPatients[0]?.id || 'H1268');
       pSel.innerHTML = allPatients.map(p => `
-        <option value="${p.id}" ${p.id === 'H1268' ? 'selected' : ''}>
+        <option value="${p.id}" ${p.id === targetId ? 'selected' : ''}>
           ${p.name} (${p.id})
         </option>
       `).join('');
 
+      await switchBillPatient(targetId);
       renderAllBillsTable(allBills);
     }
 
@@ -326,6 +445,13 @@
         document.getElementById('billInvoiceNo').textContent = bill.billId;
         document.getElementById('billTotalAmount').textContent = `₹${bill.totalAmount.toLocaleString('en-IN')}.00`;
         
+        let testBreakdown = (patientId === 'H1278') 
+          ? 'Complete Blood Count (CBC - ₹350) + Chest Digital X-Ray (₹550)' 
+          : 'Standard Pathology & Screenings';
+        let medBreakdown = (patientId === 'H1278') 
+          ? 'Amoxicillin 500mg (1-0-1), Paracetamol 650mg (SOS)' 
+          : 'Issued medications';
+
         const tbody = document.getElementById('billItemsBody');
         tbody.innerHTML = `
           <tr>
@@ -338,21 +464,59 @@
           </tr>
           <tr>
             <td>
-              <div class="fw-bold text-dark">Diagnostic Laboratory Tests</div>
-              <div class="text-muted small">Standard Pathology & Screenings</div>
+              <div class="fw-bold text-dark">Diagnostic Laboratory &amp; Imaging</div>
+              <div class="text-muted small">${testBreakdown}</div>
             </td>
-            <td><span class="badge bg-info-subtle text-info">Laboratory</span></td>
+            <td><span class="badge bg-info-subtle text-info">Diagnostics</span></td>
             <td class="text-end fw-semibold">₹${bill.testCharges}.00</td>
           </tr>
           <tr>
             <td>
-              <div class="fw-bold text-dark">Prescription Medicines & Pharmacy</div>
-              <div class="text-muted small">Issued medications</div>
+              <div class="fw-bold text-dark">Prescription Medicines &amp; Pharmacy</div>
+              <div class="text-muted small">${medBreakdown}</div>
             </td>
             <td><span class="badge bg-danger-subtle text-danger">Pharmacy</span></td>
             <td class="text-end fw-semibold">₹${bill.medicineCharges}.00</td>
           </tr>
         `;
+
+        // Synchronize printable bill document
+        const prnTbody = document.getElementById('prnBillItemsBody');
+        if (prnTbody) {
+          prnTbody.innerHTML = `
+            <tr>
+              <td>Specialist OPD Consultation (${bill.doctorName})</td>
+              <td>Consultation</td>
+              <td class="text-end">₹${bill.consultationFee}.00</td>
+            </tr>
+            <tr>
+              <td>Diagnostic Laboratory &amp; Imaging (${testBreakdown})</td>
+              <td>Diagnostics</td>
+              <td class="text-end">₹${bill.testCharges}.00</td>
+            </tr>
+            <tr>
+              <td>Pharmacy Prescription Medications (${medBreakdown})</td>
+              <td>Pharmacy</td>
+              <td class="text-end">₹${bill.medicineCharges}.00</td>
+            </tr>
+          `;
+        }
+        const prnTotal = document.getElementById('prnBillTotal');
+        if (prnTotal) {
+          prnTotal.textContent = `₹${bill.totalAmount.toLocaleString('en-IN')}.00`;
+        }
+        const prnInv = document.getElementById('prnInvoiceNo');
+        if (prnInv) {
+          prnInv.textContent = bill.billId;
+        }
+        const prnDoc = document.getElementById('prnBillDoctor');
+        if (prnDoc) {
+          prnDoc.textContent = bill.doctorName;
+        }
+        const prnDate = document.getElementById('prnBillDate');
+        if (prnDate) {
+          prnDate.textContent = bill.date || '2026-09-18';
+        }
       }
     }
 
@@ -390,6 +554,10 @@
     function printActiveBill() {
       const modal = new bootstrap.Modal(document.getElementById('invoicePrintModal'));
       modal.show();
+    }
+
+    function printReceiptDirectly() {
+      window.print();
     }
   </script>
 </body>

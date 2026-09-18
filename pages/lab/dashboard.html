@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central Diagnostic Laboratory - MedPulse HMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hms-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="hms-sidebar" id="hms-sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="hms-main">
+      <!-- HEADER -->
+      <header class="hms-header" id="hms-header"></header>
+
+      <!-- CONTENT BODY -->
+      <main class="hms-content-body">
+        
+        <!-- LAB BANNER -->
+        <div class="card border-0 rounded-4 p-4 text-white mb-4 shadow-sm" style="background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+              <span class="badge bg-white text-purple fw-semibold px-3 py-1 rounded-pill mb-2">Central Pathology & Diagnostics</span>
+              <h2 class="fw-bold mb-1">Laboratory Management Suite</h2>
+              <p class="mb-0 opacity-90 small">Process outpatient/inpatient specimens, catalog tests, input analyzer results, and authorize verified reports.</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-light text-purple fw-semibold" onclick="openNewLabOrderModal()">
+                <i class="bi bi-plus-circle-fill me-1"></i> New Sample Order
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LAB KPIS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-purple">
+              <div class="stat-pastel-title"><i class="bi bi-eyedropper text-purple"></i> Samples Today</div>
+              <div class="stat-pastel-count">38</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-coral">
+              <div class="stat-pastel-title"><i class="bi bi-hourglass-split text-danger"></i> Pending Processing</div>
+              <div class="stat-pastel-count">6</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-green">
+              <div class="stat-pastel-title"><i class="bi bi-check2-circle text-success"></i> Reports Verified</div>
+              <div class="stat-pastel-count">32</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card-pastel stat-pastel-blue">
+              <div class="stat-pastel-title"><i class="bi bi-receipt text-primary"></i> Lab Billing Today</div>
+              <div class="stat-pastel-count">₹24,850</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE LAB SAMPLES WORKLIST -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 overflow-hidden">
+          <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-list-check text-purple me-2"></i> Active Specimen Queue & Verification Worklist</h6>
+            <span class="badge bg-purple rounded-pill">Real-Time Queue</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4">Sample ID</th>
+                  <th>Patient Name</th>
+                  <th>Test Profile</th>
+                  <th>Specimen Type</th>
+                  <th>Collected At</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th class="text-end pe-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="labQueueTableBody">
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">SMP-2026-1082</td>
+                  <td>
+                    <div class="fw-bold text-dark">Sneha R</div>
+                    <div class="text-muted small">H1268 • Female / 28y</div>
+                  </td>
+                  <td>Complete Blood Count (CBC) + Widal</td>
+                  <td><span class="badge bg-light text-dark border">EDTA Whole Blood</span></td>
+                  <td class="text-muted small">Today, 09:15 AM</td>
+                  <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle">Urgent / STAT</span></td>
+                  <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">In Analysis</span></td>
+                  <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-purple" onclick="enterResultsModal('SMP-2026-1082', 'Sneha R', 'Complete Blood Count (CBC)')">
+                      <i class="bi bi-pencil-square me-1"></i> Enter Results
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">SMP-2026-1083</td>
+                  <td>
+                    <div class="fw-bold text-dark">Rahul K</div>
+                    <div class="text-muted small">H1042 • Male / 42y</div>
+                  </td>
+                  <td>Comprehensive Lipid Profile</td>
+                  <td><span class="badge bg-light text-dark border">Serum (Fasting)</span></td>
+                  <td class="text-muted small">Today, 09:40 AM</td>
+                  <td><span class="badge bg-light text-muted border">Routine</span></td>
+                  <td><span class="badge bg-info-subtle text-info border border-info-subtle">Sample Received</span></td>
+                  <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-purple" onclick="enterResultsModal('SMP-2026-1083', 'Rahul K', 'Comprehensive Lipid Profile')">
+                      <i class="bi bi-pencil-square me-1"></i> Enter Results
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="ps-4 font-monospace fw-bold text-primary">SMP-2026-1084</td>
+                  <td>
+                    <div class="fw-bold text-dark">David Chen</div>
+                    <div class="text-muted small">PAT-2026-003 • Male / 62y</div>
+                  </td>
+                  <td>HbA1c & Fasting Glucose</td>
+                  <td><span class="badge bg-light text-dark border">Fluoride Plasma</span></td>
+                  <td class="text-muted small">Today, 08:30 AM</td>
+                  <td><span class="badge bg-light text-muted border">Routine</span></td>
+                  <td><span class="badge bg-success-subtle text-success border border-success-subtle">Verified</span></td>
+                  <td class="text-end pe-4">
+                    <a href="../documents.html" class="btn btn-sm btn-outline-success">
+                      <i class="bi bi-file-earmark-check me-1"></i> View Report
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- LAB TEST DIRECTORY / TARIFF SUMMARY -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-dark mb-0"><i class="bi bi-journal-medical text-primary me-2"></i> Standard Diagnostic Test Catalog & Tariff Rates</h6>
+            <a href="../admin/prices.html" class="btn btn-sm btn-outline-primary">Open Price Master &rarr;</a>
+          </div>
+          <div class="row g-3" id="labTestCardsContainer">
+            <!-- Sample test cards -->
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <strong class="text-dark">Complete Blood Count (CBC)</strong>
+                  <span class="badge bg-primary">₹350.00</span>
+                </div>
+                <div class="text-muted small">RBC, WBC, Hemoglobin, Platelets, Hematocrit</div>
+                <div class="text-secondary small mt-2"><i class="bi bi-clock"></i> Turnaround: 2 Hours</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <strong class="text-dark">Liver Function Test (LFT)</strong>
+                  <span class="badge bg-primary">₹850.00</span>
+                </div>
+                <div class="text-muted small">SGOT, SGPT, Bilirubin Total/Direct, Alkaline Phos</div>
+                <div class="text-secondary small mt-2"><i class="bi bi-clock"></i> Turnaround: 4 Hours</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="p-3 border rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <strong class="text-dark">Kidney Function Test (KFT)</strong>
+                  <span class="badge bg-primary">₹750.00</span>
+                </div>
+                <div class="text-muted small">Serum Creatinine, Blood Urea Nitrogen, Uric Acid</div>
+                <div class="text-secondary small mt-2"><i class="bi bi-clock"></i> Turnaround: 3 Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: ENTER LAB RESULTS -->
+  <div class="modal fade" id="resultsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="saveLabResults(event)">
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title fw-bold"><i class="bi bi-clipboard-pulse text-purple me-2"></i> Input Test Parameters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="p-3 bg-light rounded-3 mb-3 small">
+              Sample: <strong id="resSampleId">SMP-2026-1082</strong> • Patient: <strong id="resPatientName">Sneha R</strong><br>
+              Test: <span id="resTestName" class="text-primary fw-bold">Complete Blood Count</span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Hemoglobin (Hb) (Ref: 12.0 - 15.5 g/dL)</label>
+              <input type="text" class="form-control" id="resHb" value="13.4 g/dL" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Total Leukocyte Count (WBC) (Ref: 4,000 - 11,000 /mcL)</label>
+              <input type="text" class="form-control" id="resWbc" value="7,800 /mcL" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Platelet Count (Ref: 1.5 - 4.5 Lakhs /mcL)</label>
+              <input type="text" class="form-control" id="resPlatelets" value="2.6 Lakhs /mcL" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Clinical Pathologist Remarks</label>
+              <textarea class="form-control" id="resRemarks" rows="2">Normal peripheral smear findings. No toxic granules seen.</textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-top bg-light">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-purple btn-sm px-4 fw-semibold text-white" style="background-color: #7c3aed;">
+              <i class="bi bi-check-circle me-1"></i> Authorize &amp; Verify Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW SAMPLE ACCESSION ORDER -->
+  <div class="modal fade" id="newSampleOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <form onsubmit="createNewSampleOrder(event)">
+          <div class="modal-header border-bottom">
+            <h5 class="modal-title fw-bold text-dark"><i class="bi bi-eyedropper text-purple me-2"></i> New Specimen Accession Order</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Select Patient <span class="text-danger">*</span></label>
+              <select class="form-select" id="orderPatientSelect" required>
+                <option value="chandanap • H1278 • Female / 23y" selected>chandanap (H1278 - Female / 23y)</option>
+                <option value="Sneha R • H1268 • Female / 28y">Sneha R (H1268 - Female / 28y)</option>
+                <option value="Rahul K • H1042 • Male / 42y">Rahul K (H1042 - Male / 42y)</option>
+                <option value="Ananya P • H1105 • Female / 31y">Ananya P (H1105 - Female / 31y)</option>
+                <option value="David Chen • PAT-2026-003 • Male / 62y">David Chen (PAT-2026-003 - Male / 62y)</option>
+                <option value="Robert Harrison • PAT-2026-001 • Male / 48y">Robert Harrison (PAT-2026-001 - Male / 48y)</option>
+                <option value="Walk-in Patient • OPD-99 • Outpatient">Walk-in Outpatient</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-secondary">Diagnostic Test Profile <span class="text-danger">*</span></label>
+              <select class="form-select" id="orderTestSelect" required onchange="autoSelectSpecimenType(this.value)">
+                <option value="Complete Blood Count (CBC)">Complete Blood Count (CBC) (₹350)</option>
+                <option value="Comprehensive Lipid Profile">Comprehensive Lipid Profile (₹650)</option>
+                <option value="Liver Function Test (LFT)">Liver Function Test (LFT) (₹850)</option>
+                <option value="Kidney Function Test (KFT)">Kidney Function Test (KFT) (₹750)</option>
+                <option value="Thyroid Profile (T3, T4, TSH)">Thyroid Profile (T3, T4, TSH) (₹550)</option>
+                <option value="HbA1c & Fasting Glucose">HbA1c & Fasting Glucose (₹400)</option>
+                <option value="Urine Routine & Microscopic Examination">Urine Routine & Microscopy (₹250)</option>
+              </select>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Specimen Tube / Type <span class="text-danger">*</span></label>
+                <select class="form-select" id="orderSpecimenSelect" required>
+                  <option value="EDTA Whole Blood">EDTA Whole Blood (Lavender)</option>
+                  <option value="Serum (Fasting)">Serum / Clot Activator (Red)</option>
+                  <option value="Fluoride Plasma">Fluoride Plasma (Grey)</option>
+                  <option value="Sterile Urine Container">Sterile Urine Container</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold text-secondary">Priority Level <span class="text-danger">*</span></label>
+                <select class="form-select" id="orderPrioritySelect" required>
+                  <option value="Routine">Routine</option>
+                  <option value="Urgent / STAT">Urgent / STAT (Emergency)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label small fw-semibold text-secondary">Phlebotomist / Order Notes</label>
+              <input type="text" class="form-control" id="orderNotes" placeholder="e.g. Fasting sample collected, no hemolysis.">
+            </div>
+          </div>
+          <div class="modal-footer border-top bg-light">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-purple btn-sm px-4 fw-semibold text-white" style="background-color: #7c3aed;">
+              <i class="bi bi-upc-scan me-1"></i> Register &amp; Accession Sample
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../data/dummyData.js"></script>
+  <script src="../../assets/js/dataStore.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/apiService.js"></script>
+  <script src="../../assets/js/navigation.js"></script>
+
+  <script>
+    let resultsModalInstance = null;
+    let newOrderModalInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      HMSNav.init('lab-portal', 'Laboratory Portal', ['Home', 'Departments', 'Laboratory'], 'lab.view');
+      resultsModalInstance = new bootstrap.Modal(document.getElementById('resultsModal'));
+      newOrderModalInstance = new bootstrap.Modal(document.getElementById('newSampleOrderModal'));
+    });
+
+    function openNewLabOrderModal() {
+      newOrderModalInstance.show();
+    }
+
+    function autoSelectSpecimenType(test) {
+      const specSelect = document.getElementById('orderSpecimenSelect');
+      if (test.includes('CBC')) specSelect.value = 'EDTA Whole Blood';
+      else if (test.includes('Glucose') || test.includes('HbA1c')) specSelect.value = 'Fluoride Plasma';
+      else if (test.includes('Urine')) specSelect.value = 'Sterile Urine Container';
+      else specSelect.value = 'Serum (Fasting)';
+    }
+
+    function createNewSampleOrder(e) {
+      e.preventDefault();
+      const patientRaw = document.getElementById('orderPatientSelect').value;
+      const parts = patientRaw.split(' • ');
+      const patientName = parts[0] || 'Patient';
+      const patientSub = parts.length > 1 ? parts.slice(1).join(' • ') : 'Outpatient';
+      const testName = document.getElementById('orderTestSelect').value;
+      const specimenType = document.getElementById('orderSpecimenSelect').value;
+      const priority = document.getElementById('orderPrioritySelect').value;
+
+      const randomNum = Math.floor(1085 + Math.random() * 50);
+      const sampleId = `SMP-2026-${randomNum}`;
+
+      newOrderModalInstance.hide();
+
+      // Priority badge styling
+      const priorityBadge = priority.includes('STAT') 
+        ? `<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Urgent / STAT</span>`
+        : `<span class="badge bg-light text-muted border">Routine</span>`;
+
+      // Insert new row at top of queue table
+      const tbody = document.getElementById('labQueueTableBody');
+      const tr = document.createElement('tr');
+      tr.className = 'table-warning-subtle';
+      tr.innerHTML = `
+        <td class="ps-4 font-monospace fw-bold text-primary">${sampleId}</td>
+        <td>
+          <div class="fw-bold text-dark">${patientName}</div>
+          <div class="text-muted small">${patientSub}</div>
+        </td>
+        <td>${testName}</td>
+        <td><span class="badge bg-light text-dark border">${specimenType}</span></td>
+        <td class="text-muted small">Just now</td>
+        <td>${priorityBadge}</td>
+        <td><span class="badge bg-info-subtle text-info border border-info-subtle">Sample Received</span></td>
+        <td class="text-end pe-4">
+          <button class="btn btn-sm btn-outline-purple" onclick="enterResultsModal('${sampleId}', '${patientName}', '${testName}')">
+            <i class="bi bi-pencil-square me-1"></i> Enter Results
+          </button>
+        </td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+
+      // Increment counters
+      const pastelCards = document.querySelectorAll('.stat-pastel-count');
+      if (pastelCards && pastelCards.length >= 2) {
+        let samplesToday = parseInt(pastelCards[0].textContent) || 38;
+        pastelCards[0].textContent = samplesToday + 1;
+
+        let pending = parseInt(pastelCards[1].textContent) || 6;
+        pastelCards[1].textContent = pending + 1;
+      }
+
+      alert(`Sample order ${sampleId} registered successfully for ${patientName}!\nSpecimen has been added to the active queue ready for analyzer results.`);
+    }
+
+    function enterResultsModal(sampleId, patient, test) {
+      document.getElementById('resSampleId').textContent = sampleId;
+      document.getElementById('resPatientName').textContent = patient;
+      document.getElementById('resTestName').textContent = test;
+      resultsModalInstance.show();
+    }
+
+    async function saveLabResults(e) {
+      e.preventDefault();
+      const sampleId = document.getElementById('resSampleId').textContent.trim();
+      const patientName = document.getElementById('resPatientName').textContent.trim();
+      const testName = document.getElementById('resTestName').textContent.trim();
+      const hb = document.getElementById('resHb').value;
+      const wbc = document.getElementById('resWbc').value;
+      const platelets = document.getElementById('resPlatelets').value;
+      const remarks = document.getElementById('resRemarks').value;
+
+      resultsModalInstance.hide();
+
+      // 1. Create and persist document into Archive
+      const docRecord = {
+        id: `DOC-${Math.floor(1000 + Math.random() * 9000)}`,
+        name: `${testName} - ${patientName}.pdf`,
+        category: 'Medical Reports',
+        uploadedDate: new Date().toISOString().split('T')[0],
+        uploadedBy: 'Central Diagnostic Lab / Super Admin',
+        fileType: 'PDF',
+        fileSize: '245 KB',
+        status: 'Verified',
+        patientName: patientName,
+        patientId: patientName === 'Sneha R' ? 'H1268' : (patientName === 'Rahul K' ? 'H1042' : 'PAT-2026-003'),
+        details: { hb, wbc, platelets, remarks }
+      };
+
+      if (window.HMSApi && window.HMSApi.documents) {
+        await window.HMSApi.documents.upload(docRecord);
+      } else if (window.HMSDataStore) {
+        window.HMSDataStore.addItem('documents', docRecord);
+      }
+
+      // 2. Dynamically update table row
+      const rows = document.querySelectorAll('#labQueueTableBody tr');
+      rows.forEach(row => {
+        if (row.textContent.includes(sampleId)) {
+          // Status column (6)
+          const statusCell = row.cells[6];
+          if (statusCell) {
+            statusCell.innerHTML = `<span class="badge bg-success-subtle text-success border border-success-subtle">Verified</span>`;
+          }
+          // Action column (7)
+          const actionCell = row.cells[7];
+          if (actionCell) {
+            actionCell.innerHTML = `
+              <a href="../documents.html" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-file-earmark-check me-1"></i> View Report
+              </a>
+            `;
+          }
+        }
+      });
+
+      // 3. Dynamically update KPI counts
+      const pastelCards = document.querySelectorAll('.stat-pastel-count');
+      if (pastelCards && pastelCards.length >= 3) {
+        // Pending Processing is index 1
+        let pending = parseInt(pastelCards[1].textContent) || 6;
+        if (pending > 0) pastelCards[1].textContent = pending - 1;
+        // Verified is index 2
+        let verified = parseInt(pastelCards[2].textContent) || 32;
+        pastelCards[2].textContent = verified + 1;
+      }
+
+      // 4. Prompt user with immediate redirect option
+      if (confirm(`Lab report for ${patientName} (${testName}) has been authorized and saved in Document Archives!\n\nWould you like to open Document Archives now to view it?`)) {
+        window.location.href = '../documents.html';
+      }
+    }
+  </script>
+</body>
+</html>

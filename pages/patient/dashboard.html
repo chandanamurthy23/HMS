@@ -6,7 +6,133 @@
   <title>Patient Portal - MedPulse HMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="../../assets/css/style.css" rel="stylesheet">
+  <link href="../../assets/css/style.css?v=3.0" rel="stylesheet">
+  <style>
+    :root {
+      --hms-sidebar-width: 260px;
+      --hms-header-height: 68px;
+    }
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+    .hms-wrapper {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+    .hms-sidebar {
+      width: 260px;
+      background-color: #0f172a;
+      border-right: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1040;
+    }
+    .hms-sidebar-brand {
+      height: 68px;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid #1e293b;
+    }
+    .hms-sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem 0.85rem;
+    }
+    .hms-nav-group-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      color: #64748b;
+      padding: 0.85rem 0.75rem 0.35rem;
+    }
+    .hms-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-radius: 8px;
+      margin-bottom: 0.25rem;
+      transition: all 0.15s ease-in-out;
+    }
+    .hms-nav-item i {
+      font-size: 1.15rem;
+      color: #64748b;
+      width: 20px;
+      text-align: center;
+    }
+    .hms-nav-item:hover {
+      background-color: #1e293b;
+      color: #f1f5f9;
+    }
+    .hms-nav-item:hover i {
+      color: #38bdf8;
+    }
+    .hms-nav-item.active {
+      background-color: #0d6efd;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .hms-nav-item.active i {
+      color: #ffffff;
+    }
+    .hms-sidebar-footer {
+      padding: 1rem;
+      border-top: 1px solid #1e293b;
+      background: #0f172a;
+      color: #ffffff;
+    }
+    .hms-main {
+      flex: 1;
+      margin-left: 260px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f8fafc;
+    }
+    .hms-header {
+      height: 68px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+    .hms-content-body {
+      flex: 1;
+      padding: 1.75rem 1.75rem 3rem;
+    }
+    @media (max-width: 991.98px) {
+      .hms-sidebar {
+        transform: translateX(-100%);
+      }
+      .hms-main {
+        margin-left: 0;
+      }
+      .hms-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -26,11 +152,11 @@
         <div class="card border-0 rounded-4 p-4 text-white mb-4 shadow-sm" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
           <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div class="d-flex align-items-center gap-3">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256" class="rounded-circle border border-2 border-white shadow-sm" width="64" height="64" style="object-fit: cover;">
+              <img id="patientAvatarHeader" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=256" class="rounded-circle border border-2 border-white shadow-sm" width="64" height="64" style="object-fit: cover;">
               <div>
                 <span class="badge bg-white text-success fw-semibold px-3 py-1 rounded-pill mb-1">Patient Portal</span>
-                <h2 class="fw-bold mb-0">Robert Harrison</h2>
-                <p class="mb-0 opacity-90 small">Patient ID: <strong>PAT-2026-001</strong> • Blood Group: <strong>O+</strong> • Age: <strong>48</strong></p>
+                <h2 class="fw-bold mb-0" id="patientNameHeader">chandanap</h2>
+                <p class="mb-0 opacity-90 small" id="patientSubHeader">Patient ID: <strong>H1278</strong> • Email: <strong>chandanap.murthy@gmail.com</strong> • Blood Group: <strong>A+</strong></p>
               </div>
             </div>
             <div>
@@ -242,10 +368,47 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Ensure patient context
-      const user = HMSAuth.getCurrentUser();
-      if (user.role !== 'Patient') {
-        HMSAuth.switchRole('Patient');
+      let user = HMSAuth.getCurrentUser();
+      
+      // Look up patient profile in HMSDataStore if registered
+      let patientData = null;
+      if (typeof HMSDataStore !== 'undefined') {
+        const patients = HMSDataStore.getCollection('patients');
+        if (user && user.email) {
+          patientData = patients.find(p => p.email && p.email.toLowerCase() === user.email.toLowerCase());
+        }
+        if (!patientData && user && user.name && user.name.toLowerCase().includes('chandana')) {
+          patientData = patients.find(p => p.name && p.name.toLowerCase().includes('chandana'));
+        }
+        if (!patientData && (!user || user.role === 'Patient')) {
+          patientData = patients.find(p => p.id === 'H1278') || patients[0];
+        }
+      }
+
+      const displayName = (patientData && patientData.name) || (user && user.name && user.name !== 'Patient' ? user.name : 'chandanap');
+      const displayId = (patientData && patientData.id) || (user && user.id && user.id !== 'PAT-2026-001' ? user.id : 'H1278');
+      const displayEmail = (patientData && patientData.email) || (user && user.email && !user.email.includes('example.com') ? user.email : 'chandanap.murthy@gmail.com');
+      const displayPhone = (patientData && patientData.phone) || (user && user.phone ? user.phone : '+91 98450 12345');
+      const displayBlood = (patientData && patientData.bloodGroup) || 'A+';
+
+      const nameEl = document.getElementById('patientNameHeader');
+      if (nameEl) nameEl.textContent = displayName;
+
+      const avatarEl = document.getElementById('patientAvatarHeader');
+      if (avatarEl && user && user.avatar) avatarEl.src = user.avatar;
+
+      const subEl = document.getElementById('patientSubHeader');
+      if (subEl) {
+        subEl.innerHTML = `Patient ID: <strong>${displayId}</strong> • Email: <strong>${displayEmail}</strong> • Blood Group: <strong>${displayBlood}</strong>`;
+      }
+
+      // Sync active user in session / localStorage
+      if (user && user.role === 'Patient') {
+        user.name = displayName;
+        user.id = displayId;
+        user.email = displayEmail;
+        user.phone = displayPhone;
+        HMSAuth.setCurrentUser(user);
       }
 
       HMSNav.init('dashboard', 'Patient Health Portal', ['Home', 'Patient Portal']);
